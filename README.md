@@ -2,16 +2,9 @@
 
 Bible Music helps a producer turn Scripture into songs that people can memorize word for word. Psalm 119 took seven months to produce. An audition queue that pinpoints a missing consonant or a cut-off ending is valuable even before the application can generate its first song.
 
-## Production vocabulary
+## Domain model and language
 
-| Term | Meaning |
-| --- | --- |
-| Source passage | The text selected for a production run, identified by reference, translation and edition. Titus is a possible source passage. |
-| Song passage | The contiguous part of the source assigned to one song. One song can also cover the entire source. |
-| Arrangement | The expected performance of a song passage, including sections, repeats, overlapping parts and any explicitly authorized custom refrain. |
-| Take | A recording of one arrangement. A repair creates a new audio revision of that take. |
-| Finding | Something the listener or comparison step observed, with the recording and enough evidence for the producer to audition it. |
-| Finalists | The strongest recordings for one song passage across all the arrangements, genres and takes tried. The producer chooses the keeper. |
+The [domain model](docs/domain/Bible-Music-Domain-Model.drawio) has four editable views covering song passages, arrangements and takes, review and selection, and production limits. The [ubiquitous language glossary](GLOSSARY.md) defines the terms used in the model, producer controls and acceptance examples.
 
 ## Engineering decisions
 

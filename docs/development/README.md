@@ -10,6 +10,10 @@ Use PyCharm as the workbench for editing, debugging, and running tests. Use Code
 
 If you prefer a terminal session, install the Codex CLI, open PyCharm’s terminal at the project root, and run `codex`. Both routes work against the files in that checkout. [Codex CLI](https://developers.openai.com/codex/cli/)
 
+## Edit the domain model
+
+In **Settings → Plugins → Marketplace**, search for **Diagrams.net Integration** and install the version compatible with your PyCharm build. Open the [domain model](../domain/Bible-Music-Domain-Model.drawio) from the project tree. The four tabs are editable views of the same vocabulary. [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/15635-diagrams-net-integration) · [draw.io's JetBrains integration notes](https://www.drawio.com/docs/integrations/third-party/)
+
 ## Locate the applicable engineering decisions
 
 Start a fresh project chat and send the following. **Plan** mode is useful for this first exchange. [Codex in JetBrains](https://www.jetbrains.com/help/ai-assistant/codex-agent.html)
