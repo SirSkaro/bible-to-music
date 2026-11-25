@@ -22,6 +22,6 @@ Record a result as a count with its denominator, such as two missed omissions ou
 
 ## Applying the producer's criteria
 
-Use the [producer QA worksheet](../../producer/listening-rubric.md) to turn a known keeper, a known reject or a pair of near-misses into a teachable criterion. Keep teaching examples distinct from scored holdouts. Store the active rubric revision on each evidence-aware review. Report any uncalibrated criterion as such.
+Use the [producer QA worksheet](../listening-rubric.md) to turn a known keeper, a known reject or a pair of near-misses into a teachable criterion. Keep teaching examples distinct from scored holdouts. Store the active rubric revision on each evidence-aware review. Report any uncalibrated criterion as such.
 
 A useful first comparison is the same arrangement under two listeners. Hold the mix, model inputs other than the listener selection, and producer labels constant. Record which known defects each listener failed to flag and how many minutes the producer spent checking the results.
