@@ -1,6 +1,10 @@
-# Producer QA worksheet
+# Review a Bible Music take
 
-This is the authoring surface for **Review a Bible Music take**. It belongs to the producer. A useful entry answers “What did you hear, why did it matter for memorization, and what did you do with this take?” A short pair of recordings with a clear difference can teach more than a page of adjectives.
+This is the producer-owned listening rubric for the targeted reviewer. The runtime supplies a selected revision with the brief, arrangement and audio revision. The producer can develop the criteria here as real examples become available. A useful entry answers “What did you hear, why did it matter for memorization, and what did you do with this take?” A short pair of recordings with a clear difference can teach more than a page of adjectives.
+
+## Using the rubric on a take
+
+Listen to the complete mix. For an ambiguous passage, audition the surrounding phrase. Use a vocal stem as supplementary evidence when available. Record the exact revision, what was audible, the expected placement, the evidence source and a time window with its precision. Mark a criterion unscored until the producer supplies its decision rule. Apply only the producer’s recorded rules to eligibility and ranking. Keep the producer’s final choice separate from the review.
 
 ## One entry per judgment
 

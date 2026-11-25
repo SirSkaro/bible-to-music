@@ -1,0 +1,295 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device" version="26.0.0" compressed="false">
+  <diagram id="scripture-music-production" name="Scripture music production">
+    <mxGraphModel dx="1570" dy="905" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1560" pageHeight="910" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Bible Music" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=38;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="38" y="24" width="300" height="44" />
+        </mxCell>
+        <mxCell id="subtitle" value="Scripture music production  /  Domain model" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=21;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="40" y="73" width="870" height="26" />
+        </mxCell>
+        <mxCell id="plan" value="" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#FFFFFF;strokeColor=#8AA0A6;strokeWidth=1.5;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry as="geometry" x="40" y="130" width="418" height="290" />
+        </mxCell>
+        <mxCell id="plan-wash" value="" parent="plan" vertex="1" style="rounded=0;strokeColor=none;fillColor=#E8F2EF;connectable=0;">
+          <mxGeometry as="geometry" x="1" y="1" width="416" height="62" />
+        </mxCell>
+        <mxCell id="plan-type" value="«aggregate root»" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=13;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="7" width="386" height="18" />
+        </mxCell>
+        <mxCell id="plan-name" value="Passage plan" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=26;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="24" width="388" height="34" />
+        </mxCell>
+        <mxCell id="plan-m0" value="«value object»   Source passage" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="72" width="386" height="18" />
+        </mxCell>
+        <mxCell id="plan-d0" value="1 edition-bound Scripture range" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="91" width="386" height="18" />
+        </mxCell>
+        <mxCell id="plan-m1" value="«value object»   Song boundary policy" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="116" width="386" height="18" />
+        </mxCell>
+        <mxCell id="plan-d1" value="1 policy and 0..* pinned boundaries" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="135" width="386" height="18" />
+        </mxCell>
+        <mxCell id="plan-m2" value="«value object»   Song passage" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="160" width="386" height="18" />
+        </mxCell>
+        <mxCell id="plan-d2" value="1..* ordered, contiguous ranges" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="179" width="386" height="18" />
+        </mxCell>
+        <mxCell id="plan-line" value="" parent="plan" vertex="1" style="strokeColor=none;fillColor=#CDDBDA;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="205" width="386" height="1" />
+        </mxCell>
+        <mxCell id="plan-behavior" value="Approve plan revision" parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="213" width="386" height="19" />
+        </mxCell>
+        <mxCell id="plan-invariant" value="Cover the complete source exactly once.&#10;Every ending, including the last, satisfies policy." parent="plan" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="236" width="386" height="39" />
+        </mxCell>
+        <mxCell id="arrangement" value="" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#FFFFFF;strokeColor=#8AA0A6;strokeWidth=1.5;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry as="geometry" x="571" y="130" width="418" height="290" />
+        </mxCell>
+        <mxCell id="arrangement-wash" value="" parent="arrangement" vertex="1" style="rounded=0;strokeColor=none;fillColor=#E8F2EF;connectable=0;">
+          <mxGeometry as="geometry" x="1" y="1" width="416" height="62" />
+        </mxCell>
+        <mxCell id="arrangement-type" value="«aggregate root»" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=13;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="7" width="386" height="18" />
+        </mxCell>
+        <mxCell id="arrangement-name" value="Arrangement" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=26;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="24" width="388" height="34" />
+        </mxCell>
+        <mxCell id="arrangement-m0" value="«value object»   Producer brief" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="72" width="386" height="18" />
+        </mxCell>
+        <mxCell id="arrangement-d0" value="1 set of fixed, guided or delegated choices" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="91" width="386" height="18" />
+        </mxCell>
+        <mxCell id="arrangement-m1" value="«value object»   Lyric placement" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="116" width="386" height="18" />
+        </mxCell>
+        <mxCell id="arrangement-d1" value="1..* sections and voice placements" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="135" width="386" height="18" />
+        </mxCell>
+        <mxCell id="arrangement-m2" value="Text provenance" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="160" width="386" height="18" />
+        </mxCell>
+        <mxCell id="arrangement-d2" value="Scripture span or explicitly authorized text" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="179" width="386" height="18" />
+        </mxCell>
+        <mxCell id="arrangement-line" value="" parent="arrangement" vertex="1" style="strokeColor=none;fillColor=#CDDBDA;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="205" width="386" height="1" />
+        </mxCell>
+        <mxCell id="arrangement-behavior" value="Approve arrangement revision" parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="213" width="386" height="19" />
+        </mxCell>
+        <mxCell id="arrangement-invariant" value="Account for Scripture coverage and the origin&#10;of every intended word and repetition." parent="arrangement" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="236" width="386" height="39" />
+        </mxCell>
+        <mxCell id="take" value="" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#FFFFFF;strokeColor=#8AA0A6;strokeWidth=1.5;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry as="geometry" x="1102" y="130" width="418" height="290" />
+        </mxCell>
+        <mxCell id="take-wash" value="" parent="take" vertex="1" style="rounded=0;strokeColor=none;fillColor=#E8F2EF;connectable=0;">
+          <mxGeometry as="geometry" x="1" y="1" width="416" height="62" />
+        </mxCell>
+        <mxCell id="take-type" value="«aggregate root»" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=13;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="7" width="386" height="18" />
+        </mxCell>
+        <mxCell id="take-name" value="Take" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=26;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="24" width="388" height="34" />
+        </mxCell>
+        <mxCell id="take-m0" value="«entity»   Audio revision" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="72" width="386" height="18" />
+        </mxCell>
+        <mxCell id="take-d0" value="1 original plus 0..* repaired revisions" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="91" width="386" height="18" />
+        </mxCell>
+        <mxCell id="take-m1" value="Original performance" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="116" width="386" height="18" />
+        </mxCell>
+        <mxCell id="take-d1" value="Generated or imported for one arrangement" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="135" width="386" height="18" />
+        </mxCell>
+        <mxCell id="take-m2" value="Revision lineage" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="160" width="386" height="18" />
+        </mxCell>
+        <mxCell id="take-d2" value="A repair links to a parent in this take" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="179" width="386" height="18" />
+        </mxCell>
+        <mxCell id="take-line" value="" parent="take" vertex="1" style="strokeColor=none;fillColor=#CDDBDA;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="205" width="386" height="1" />
+        </mxCell>
+        <mxCell id="take-behavior" value="Record repair" parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="213" width="386" height="19" />
+        </mxCell>
+        <mxCell id="take-invariant" value="Preserve the performance identity.&#10;Retain every earlier audio revision." parent="take" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="236" width="386" height="39" />
+        </mxCell>
+        <mxCell id="run" value="" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#FFFFFF;strokeColor=#8AA0A6;strokeWidth=1.5;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry as="geometry" x="40" y="547" width="418" height="290" />
+        </mxCell>
+        <mxCell id="run-wash" value="" parent="run" vertex="1" style="rounded=0;strokeColor=none;fillColor=#E8F2EF;connectable=0;">
+          <mxGeometry as="geometry" x="1" y="1" width="416" height="62" />
+        </mxCell>
+        <mxCell id="run-type" value="«aggregate root»" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=13;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="7" width="386" height="18" />
+        </mxCell>
+        <mxCell id="run-name" value="Production run" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=26;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="24" width="388" height="34" />
+        </mxCell>
+        <mxCell id="run-m0" value="«value object»   Run budget" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="72" width="386" height="18" />
+        </mxCell>
+        <mxCell id="run-d0" value="1 cap with settled and reserved amounts" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="91" width="386" height="18" />
+        </mxCell>
+        <mxCell id="run-m1" value="«entity»   Paid operation" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="116" width="386" height="18" />
+        </mxCell>
+        <mxCell id="run-d1" value="0..* identified operations and reservations" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="135" width="386" height="18" />
+        </mxCell>
+        <mxCell id="run-m2" value="Per-song limits" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="160" width="386" height="18" />
+        </mxCell>
+        <mxCell id="run-d2" value="Full-generation slots and repair allowances" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="179" width="386" height="18" />
+        </mxCell>
+        <mxCell id="run-line" value="" parent="run" vertex="1" style="strokeColor=none;fillColor=#CDDBDA;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="205" width="386" height="1" />
+        </mxCell>
+        <mxCell id="run-behavior" value="Reserve operation / settle operation" parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="213" width="386" height="19" />
+        </mxCell>
+        <mxCell id="run-invariant" value="Spend + reservations ≤ cap. Grant funds and&#10;required attempt slots in one decision." parent="run" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="236" width="386" height="39" />
+        </mxCell>
+        <mxCell id="finalists" value="" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#FFFFFF;strokeColor=#8AA0A6;strokeWidth=1.5;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry as="geometry" x="571" y="547" width="418" height="290" />
+        </mxCell>
+        <mxCell id="finalists-wash" value="" parent="finalists" vertex="1" style="rounded=0;strokeColor=none;fillColor=#E8F2EF;connectable=0;">
+          <mxGeometry as="geometry" x="1" y="1" width="416" height="62" />
+        </mxCell>
+        <mxCell id="finalists-type" value="«aggregate root»" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=13;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="7" width="386" height="18" />
+        </mxCell>
+        <mxCell id="finalists-name" value="Finalist list" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=26;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="24" width="388" height="34" />
+        </mxCell>
+        <mxCell id="finalists-m0" value="«value object»   Finalist" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="72" width="386" height="18" />
+        </mxCell>
+        <mxCell id="finalists-d0" value="0..N eligible entries, ranked across treatments" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="91" width="386" height="18" />
+        </mxCell>
+        <mxCell id="finalists-m1" value="Comparison basis" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="116" width="386" height="18" />
+        </mxCell>
+        <mxCell id="finalists-d1" value="1 song passage and 1 rubric revision" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="135" width="386" height="18" />
+        </mxCell>
+        <mxCell id="finalists-m2" value="Producer’s keeper" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="160" width="386" height="18" />
+        </mxCell>
+        <mxCell id="finalists-d2" value="0..1 selected finalist, recorded by revision" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="179" width="386" height="18" />
+        </mxCell>
+        <mxCell id="finalists-line" value="" parent="finalists" vertex="1" style="strokeColor=none;fillColor=#CDDBDA;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="205" width="386" height="1" />
+        </mxCell>
+        <mxCell id="finalists-behavior" value="Rank finalists / choose keeper" parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="213" width="386" height="19" />
+        </mxCell>
+        <mxCell id="finalists-invariant" value="Use one entry per distinct take. Compare&#10;under the same rubric and honor the choice." parent="finalists" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="236" width="386" height="39" />
+        </mxCell>
+        <mxCell id="review" value="" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#FFFFFF;strokeColor=#8AA0A6;strokeWidth=1.5;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry as="geometry" x="1102" y="547" width="418" height="290" />
+        </mxCell>
+        <mxCell id="review-wash" value="" parent="review" vertex="1" style="rounded=0;strokeColor=none;fillColor=#E8F2EF;connectable=0;">
+          <mxGeometry as="geometry" x="1" y="1" width="416" height="62" />
+        </mxCell>
+        <mxCell id="review-type" value="«aggregate root»" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=13;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="7" width="386" height="18" />
+        </mxCell>
+        <mxCell id="review-name" value="Take review" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=26;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="24" width="388" height="34" />
+        </mxCell>
+        <mxCell id="review-m0" value="«value object»   Listener observation" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="72" width="386" height="18" />
+        </mxCell>
+        <mxCell id="review-d0" value="Blind or targeted, with evidence source" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="91" width="386" height="18" />
+        </mxCell>
+        <mxCell id="review-m1" value="«value object»   Finding" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="116" width="386" height="18" />
+        </mxCell>
+        <mxCell id="review-d1" value="0..* findings with uncertainty and optional timing" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="135" width="386" height="18" />
+        </mxCell>
+        <mxCell id="review-m2" value="«value object»   Audition window" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="160" width="386" height="18" />
+        </mxCell>
+        <mxCell id="review-d2" value="Optional interval with stated time precision" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=14;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="179" width="386" height="18" />
+        </mxCell>
+        <mxCell id="review-line" value="" parent="review" vertex="1" style="strokeColor=none;fillColor=#CDDBDA;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="205" width="386" height="1" />
+        </mxCell>
+        <mxCell id="review-behavior" value="Assess audio revision" parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#135B57;fontSize=15;fontStyle=1;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="213" width="386" height="19" />
+        </mxCell>
+        <mxCell id="review-invariant" value="Bind evidence to one revision and arrangement.&#10;Record the rubric revision for each score." parent="review" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#192E39;fontSize=15;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="16" y="236" width="386" height="39" />
+        </mxCell>
+        <mxCell id="arrangement-plan" parent="1" edge="1" source="arrangement" target="plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=open;endFill=0;endSize=9;strokeWidth=1.6;strokeColor=#476B71;orthogonalLoop=1;exitX=0;exitY=0.53;exitPerimeter=0;entryX=1;entryY=0.53;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrangement-plan-label" value="1 plan revision&#10;+ song range" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#345761;fontSize=13;fontStyle=0;connectable=0;align=center;fillColor=#FFFFFF;">
+          <mxGeometry as="geometry" x="461" y="236" width="106" height="37" />
+        </mxCell>
+        <mxCell id="take-arrangement" parent="1" edge="1" source="take" target="arrangement" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=open;endFill=0;endSize=9;strokeWidth=1.6;strokeColor=#476B71;orthogonalLoop=1;exitX=0;exitY=0.53;exitPerimeter=0;entryX=1;entryY=0.53;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="take-arrangement-label" value="1 arrangement&#10;revision" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#345761;fontSize=13;fontStyle=0;connectable=0;align=center;fillColor=#FFFFFF;">
+          <mxGeometry as="geometry" x="992" y="236" width="107" height="37" />
+        </mxCell>
+        <mxCell id="run-plan" parent="1" edge="1" source="run" target="plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=open;endFill=0;endSize=9;strokeWidth=1.6;strokeColor=#476B71;orthogonalLoop=1;exitX=0.28;exitY=0;exitPerimeter=0;entryX=0.28;entryY=1;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="run-plan-label" value="0..1 approved plan revision" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#345761;fontSize=13;fontStyle=0;connectable=0;align=center;fillColor=#FFFFFF;">
+          <mxGeometry as="geometry" x="164" y="460" width="192" height="29" />
+        </mxCell>
+        <mxCell id="review-take" parent="1" edge="1" source="review" target="take" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=open;endFill=0;endSize=9;strokeWidth=1.6;strokeColor=#476B71;orthogonalLoop=1;exitX=0.5;exitY=0;exitPerimeter=0;entryX=0.5;entryY=1;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="review-take-label" value="1 take ID&#10;+ revision key" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#345761;fontSize=13;fontStyle=0;connectable=0;align=center;fillColor=#FFFFFF;">
+          <mxGeometry as="geometry" x="1322" y="463" width="150" height="38" />
+        </mxCell>
+        <mxCell id="finalists-review" parent="1" edge="1" source="finalists" target="review" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=open;endFill=0;endSize=9;strokeWidth=1.6;strokeColor=#476B71;orthogonalLoop=1;exitX=1;exitY=0.53;exitPerimeter=0;entryX=0;entryY=0.53;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="finalists-review-label" value="0..N scored&#10;review IDs" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#345761;fontSize=13;fontStyle=0;connectable=0;align=center;fillColor=#FFFFFF;">
+          <mxGeometry as="geometry" x="992" y="651" width="107" height="37" />
+        </mxCell>
+        <mxCell id="finalists-plan" parent="1" edge="1" source="finalists" target="plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=open;endFill=0;endSize=9;strokeWidth=1.6;strokeColor=#476B71;orthogonalLoop=1;exitX=0.3;exitY=0;exitPerimeter=0;entryX=0.81;entryY=1;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="696" y="491" />
+              <mxPoint x="379" y="491" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="finalists-plan-label" value="1 plan revision + song range" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#345761;fontSize=13;fontStyle=0;connectable=0;align=center;fillColor=#FFFFFF;">
+          <mxGeometry as="geometry" x="433" y="465" width="209" height="23" />
+        </mxCell>
+        <mxCell id="legend" value="Each box is an aggregate. Its root enforces the stated rule. Arrows reference other roots by identity. A count describes the targets of one source." parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#405563;fontSize=15;fontStyle=0;connectable=0;">
+          <mxGeometry as="geometry" x="40" y="864" width="1480" height="23" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
