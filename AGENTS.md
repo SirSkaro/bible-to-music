@@ -6,7 +6,7 @@ Bible Music is a local Scripture music production workbench. Its producer direct
 
 Use Atomic for agent repository operations and let trusted Codex hooks record changes with provenance. Use the local Vault to recover project context across sessions. Keep enduring engineering decisions in the checked-in ADRs and glossary.
 
-GitHub remains the collaboration remote. The Git shim maps the shared Atomic view to the Git branch for the maintainer to publish. Work from the main checkout and use `atomic git shim status` to inspect the mapping. Run `atomic git shim reconcile` after the maintainer moves the Git branch, then `atomic git shim verify` to check agreement. Keep Atomic Storage publishing opt-in. See the [Atomic setup skill](.agents/skills/atomic-setup/SKILL.md) and [Git shim guide](https://docs.atomic.dev/getting-started/git-shim).
+GitHub remains the collaboration remote. The Git shim maps the shared Atomic view to the Git branch for the maintainer to publish. Work from the main checkout and use `atomic git shim status` to inspect the mapping. Run `atomic git shim reconcile` after the maintainer moves the Git branch, then `atomic git shim verify` to check agreement. Atomic Storage is already configured in this project. See the [Atomic setup skill](.agents/skills/atomic-setup/SKILL.md) and [Git shim guide](https://docs.atomic.dev/getting-started/git-shim).
 
 ## Workflow and product rules
 
