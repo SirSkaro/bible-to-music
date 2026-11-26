@@ -36,7 +36,7 @@ Kent Beck’s **features and futures** both matter in review. After the feature 
 | **Interface Segregation Principle (ISP)** | Define the smallest useful contract for each caller. Playback needs seek/play. A repair client needs render. Split a broad audio interface when callers use different capabilities. |
 | **Dependency Inversion Principle (DIP)** | Define the listener protocol and its observation at the application boundary. Inject the implementation. Keep SDK imports and response translation inside the adapter. |
 
-| Martin’s component principle | Apply it in a change |
+| Component Cohesion + Coupling Principles | Apply it in a change |
 | --- | --- |
 | **Reuse/Release Equivalence Principle (REP)** · cohesion | If consumers reuse an extracted review contract, version its mutually required types as one release. Keep the monolith’s release unit until extraction has a consumer. |
 | **Common Closure Principle (CCP)** · cohesion | Put rules that change for one producer decision together. A new permitted ending should be implemented once and used by both manual and artist planning. |
