@@ -2,12 +2,6 @@
 
 Bible Music is a local Scripture music production workbench. Its producer directs an artist, auditions recordings and chooses the performance people will use to memorize the passage. Build an offline, inspectable path through each use case. An imported recording and a replayed observation are valid inputs from the first slice.
 
-## Atomic and GitHub
-
-Use Atomic for agent repository operations and let trusted Codex hooks record changes with provenance. Use the local Vault to recover project context across sessions. Keep enduring engineering decisions in the checked-in ADRs and glossary.
-
-GitHub remains the collaboration remote. The Git shim maps the shared Atomic view to the Git branch for the maintainer to publish. Work from the main checkout and use `atomic git shim status` to inspect the mapping. Run `atomic git shim reconcile` after the maintainer moves the Git branch, then `atomic git shim verify` to check agreement. Atomic Storage is already configured in this project. See the [Atomic setup skill](.agents/skills/atomic-setup/SKILL.md) and [Git shim guide](https://docs.atomic.dev/getting-started/git-shim).
-
 ## Workflow and product rules
 
 1. **Plan the passages.** Resolve the producer’s source passage in the chosen translation and edition. Reject nonexistent ranges such as Titus 4. Validate fixed, partially pinned and artist-proposed cuts identically. Song passages must cover the source once, contiguously and in order. Choose sentence ends, sentence ends or semicolons, or any whole word. Intersect this with an optional verse-end requirement. Validate the final source endpoint too. Expose the offending position and legal alternatives when there is a conflict.
