@@ -14,9 +14,7 @@ class PassageNotFound(LookupError):
 
 
 class ScriptureLookup(Protocol):
-    def resolve(
-        self, edition_id: str, reference: str
-    ) -> tuple[BibleEdition, ScriptureRange]:
+    def resolve(self, edition_id: str, reference: str) -> tuple[BibleEdition, ScriptureRange]:
         """Resolve a passage or raise KeyError for an unknown edition or reference."""
         ...
 
