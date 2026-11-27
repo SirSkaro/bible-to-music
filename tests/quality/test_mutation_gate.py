@@ -9,14 +9,14 @@ PLAN = Path("src/bible_music/domain/passage_plan.py")
 CONFIRMED = {
     "worker_outcome": "normal",
     "test_outcome": "killed",
-    "output": "DOMAIN_PYTEST_EXIT=1\n",
+    "output": "PYTEST_EXIT=1\n",
 }
 SURVIVOR = {
     "worker_outcome": "normal",
     "test_outcome": "survived",
-    "output": "DOMAIN_PYTEST_EXIT=0\n",
+    "output": "PYTEST_EXIT=0\n",
 }
-UNTESTED = {**CONFIRMED, "output": "DOMAIN_PYTEST_EXIT=5\n"}
+UNTESTED = {**CONFIRMED, "output": "PYTEST_EXIT=5\n"}
 
 
 @pytest.fixture(scope="module")
@@ -72,3 +72,9 @@ def test_mutation_gate_does_not_average_modules(score_report):
 
 def test_gate_requires_results_for_the_selected_module(score_report):
     assert not score_report("", {REVIEW})
+
+
+def test_a_module_without_mutable_operators_can_have_an_empty_report(score_report):
+    wrapper = Path("src/bible_music/app/review_take.py")
+    assert score_report("", {wrapper}, {wrapper})
+    assert not score_report(session_report([(wrapper, None)]), {wrapper}, {wrapper})

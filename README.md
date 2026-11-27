@@ -36,7 +36,13 @@ The intended implementation is a Python modular monolith using Clean Architectur
 | Adapters | PySide6 handles producer interaction. Mureka, SoundCraft, listening models, SQLite, local audio files and the credential store each translate between an outside system and an application contract. |
 | Composition root | Selects replay or live implementations and wires them into the same use cases. Durable execution can use LangGraph when paid-job recovery or a paused audition gives it a concrete job. |
 
-## Domain verification
+## Offline use cases
+
+`bible_music.app.review_take.review_take` reviews an imported take against its arrangement using a recorded listener observation. It returns findings tied to the audio and arrangement revisions, with an inferred audition window when both neighboring words have usable timing.
+
+`bible_music.app.preview_passage.preview_passage` resolves a source reference in the selected edition through the Scripture lookup port. It returns the proposed song passages or the conflicting positions and legal alternatives. For offline use, `InMemoryScripture` resolves registered references from supplied editions and ranges.
+
+## Offline verification
 
 The first domain operations, `TakeReview.assess` and `PassagePlan.preview`, run on normalized observations and edition-marked words. The review compares ordered lyric placements for an exact match or a uniquely located single-word omission. More complex or ambiguous observations yield an inconclusive review.
 
@@ -48,9 +54,9 @@ source .venv/bin/activate
 python -m pip install -e '.[dev]'
 ```
 
-Run the full offline suite with `bash scripts/check-domain.sh`. It checks behavior, formatting, lint, McCabe complexity of at most 10 per function, and acyclic domain imports. The architecture test restricts domain imports to its own package and the standard library.
+Run the full offline suite with `bash scripts/check-domain.sh`. It checks behavior, formatting, lint, McCabe complexity of at most 10 per function, and inward dependencies from adapters through app to domain. The architecture checks also enforce acyclic domain imports and restrict the domain to its own package and the standard library.
 
-Cosmic Ray runs the domain tests against mutations in a fresh temporary source copy. Each covered module needs at least 95% confirmed kills. Survivors and untested mutants earn zero, and incomplete runs fail.
+Cosmic Ray runs the domain and app behavior tests against mutations in a fresh temporary source copy. Each module with generated mutants needs at least 95% confirmed kills. Survivors and untested mutants earn zero, and incomplete runs fail. Cosmic Ray 8.9.0 generates no mutants for the take-review forwarding function or the in-memory Scripture lookup. The app behavior tests exercise both.
 
 For a focused check, select the behavior test file and the source module. The take-review tests also exercise `Take`.
 
@@ -59,4 +65,11 @@ python -m pytest tests/domain/test_take_review.py
 ruff check src/bible_music/domain/take_review.py
 ruff format --check src/bible_music/domain/take_review.py
 python scripts/check_mutations.py take_review
+```
+
+```sh
+python -m pytest tests/app/test_preview_passage.py
+ruff check src/bible_music/app/preview_passage.py
+ruff format --check src/bible_music/app/preview_passage.py
+python scripts/check_mutations.py preview_passage
 ```

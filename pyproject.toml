@@ -41,6 +41,12 @@ max-complexity = 10
 root_package = "bible_music"
 
 [[tool.importlinter.contracts]]
+name = "Application and adapters depend inward"
+type = "layers"
+containers = ["bible_music"]
+layers = ["adapters", "app", "domain"]
+
+[[tool.importlinter.contracts]]
 name = "Domain modules have acyclic dependencies"
 type = "acyclic_siblings"
 ancestors = ["bible_music.domain"]
