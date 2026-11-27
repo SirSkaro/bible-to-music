@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bible-music"
+version = "0.1.0"
+description = "A local Scripture music production workbench"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "cosmic-ray==8.9.0",
+    "import-linter>=2.6,<3",
+    "pytest>=9,<10",
+    "ruff>=0.14,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["B", "C901", "E4", "E7", "E9", "F", "I", "UP"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.per-file-ignores]
+# Cosmic Ray 8.9.0 mutates module-level return-type unions as binary operations.
+"src/bible_music/domain/take_review.py" = ["UP045"]
+
+[tool.importlinter]
+root_package = "bible_music"
+
+[[tool.importlinter.contracts]]
+name = "Domain modules have acyclic dependencies"
+type = "acyclic_siblings"
+ancestors = ["bible_music.domain"]
