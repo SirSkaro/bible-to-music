@@ -20,6 +20,8 @@ An aggregate root owns the invariants that must hold in a single change. The **p
 
 Use a Python modular monolith. The domain makes decisions. Application use cases orchestrate them and own the ports they call. PySide6 is a driving adapter. Mureka, the listener, local SoundCraft editing, SQLite, file storage and credentials are driven adapters. The composition root wires implementations. Source dependencies point inward even when runtime control flows out to an injected provider.
 
+Public application use cases return immutable application views. Map the result and its nested values at the application boundary. Assert the view fields in public use-case tests and use the architecture tests to check the declared result types. [ADR 0001](docs/decisions/0001-python-modular-monolith.md)
+
 Kent Beck’s **features and futures** both matter in review. After the feature passes, inspect the next concrete change it makes likely. For example, ask what a second listening model would force you to edit. If a provider field leaks into omission policy, translate it at the adapter now and rerun the same acceptance example. Defer general extension machinery until a real second use warrants it. [Kent Beck, Features Versus Futures, 13:45](https://www.youtube.com/watch?v=AZn7JZiNetA&t=825s) · [Why Does Development Slow?](https://newsletter.kentbeck.com/p/why-does-development-slow)
 
 | SOLID principle | Apply it in a change |
@@ -43,8 +45,23 @@ Use these principles to explain a consequential design choice in terms of the be
 
 ## Modules and verification
 
-All tests must pass. Lint, complexity, architectural dependency checks, and mutation testing must meet the project’s thresholds. 
-Document the full-suite and per-module commands when the build is established.
+Set up the locked Python 3.13 development environment using the [README](README.md#offline-verification). Run the full offline gate before handing off a change.
+
+```sh
+bash scripts/check-domain.sh
+```
+
+Use these commands for focused verification.
+
+```sh
+python -m pytest tests/app/test_review_take.py
+python scripts/check_lint.py src/bible_music/app/review_take.py
+python -m pytest tests/architecture
+lint-imports --no-cache
+python scripts/check_mutations.py src/bible_music/app/review_take.py
+```
+
+The defaults are a 95% confirmed mutation kill floor per covered module and a McCabe complexity cap of 10 per function. Configure any per-module overrides in `pyproject.toml` by repository-relative Python file path and record the reason for the override. Focused and full runs use the same thresholds. [ADR 0003](docs/decisions/0003-replay-and-live-evaluation.md)
 
 ## When to open another file
 
@@ -54,6 +71,7 @@ Document the full-suite and per-module commands when the build is established.
 | A module, port, adapter, cross-layer import or new dependency | [ADR 0001](docs/decisions/0001-python-modular-monolith.md) for dependency direction and the cost of introducing a boundary. |
 | Billable work, retry, repair, resumption, persistence or a new workflow branch | [ADR 0002](docs/decisions/0002-replaceable-workflow-steps.md) and [production workflow](docs/workflows/production.md) for operation identity, limits and routing. |
 | A change in a test gate, listener inputs, rubric or evaluation method | [ADR 0003](docs/decisions/0003-replay-and-live-evaluation.md) for the boundary between software evidence and listening evidence. |
+| Dependency pins, lock files or verification platforms | [ADR 0005](docs/decisions/0005-reproducible-development-builds.md) for the locked environment and update procedure. |
 | Cut positions, creative authority, authorized lyrics or finalist eligibility | [ADR 0004](docs/decisions/0004-song-passages-and-creative-authority.md) for conflicts, fixed choices and selection. |
 | Implementing or repairing an observable behavior | [Local TDD skill](.agents/skills/tdd/SKILL.md). Use a public use case, aggregate or adapter contract. Take one failing example through green and refactor. |
 | Implementing a durable LangGraph adapter | [Local LangChain skill](.agents/skills/langchain-build-agent/SKILL.md). Verify APIs against the installed, locked package. The application owns business transitions. |

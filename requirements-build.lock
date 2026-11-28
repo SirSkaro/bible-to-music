@@ -1,0 +1,6 @@
+# Generated from the verified dependency versions and their PyPI artifact hashes.
+# CPython 3.13 on macOS and glibc Linux. See ADR 0005 for the update procedure.
+--only-binary :all:
+
+setuptools==84.2.1 \
+    --hash=sha256:ca140b45d5325a9478f880e351484f62fef15f336462e449ca0c03c873d589c2

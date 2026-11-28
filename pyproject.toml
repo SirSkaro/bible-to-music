@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools==84.2.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -12,9 +12,9 @@ dependencies = []
 [project.optional-dependencies]
 dev = [
     "cosmic-ray==8.9.0",
-    "import-linter>=2.6,<3",
-    "pytest>=9,<10",
-    "ruff>=0.14,<1",
+    "import-linter==2.17",
+    "pytest==9.2.0",
+    "ruff==0.17.6",
 ]
 
 [tool.setuptools.packages.find]
@@ -23,6 +23,15 @@ where = ["src"]
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib"]
 testpaths = ["tests"]
+
+[tool.bible-music.verification]
+minimum-kill-percent = 95
+
+[tool.bible-music.verification.mutation-overrides]
+# "src/bible_music/domain/passage_plan.py" = 96
+
+[tool.bible-music.verification.complexity-overrides]
+# "src/bible_music/app/review_take.py" = 8
 
 [tool.ruff]
 target-version = "py313"
@@ -45,6 +54,12 @@ name = "Application and adapters depend inward"
 type = "layers"
 containers = ["bible_music"]
 layers = ["adapters", "app", "domain"]
+
+[[tool.importlinter.contracts]]
+name = "Application views are independent of the domain"
+type = "forbidden"
+source_modules = ["bible_music.app.views"]
+forbidden_modules = ["bible_music.domain"]
 
 [[tool.importlinter.contracts]]
 name = "Domain modules have acyclic dependencies"

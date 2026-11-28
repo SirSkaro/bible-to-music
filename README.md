@@ -38,38 +38,45 @@ The intended implementation is a Python modular monolith using Clean Architectur
 
 ## Offline use cases
 
-`bible_music.app.review_take.review_take` reviews an imported take against its arrangement using a recorded listener observation. It returns findings tied to the audio and arrangement revisions, with an inferred audition window when both neighboring words have usable timing.
+`bible_music.app.review_take.review_take` reviews an imported take against its arrangement using a recorded listener observation. Its immutable `TakeReviewView` carries the audio and arrangement revision identifiers, the recorded evidence, and any findings. A finding includes an inferred audition window when both neighboring words have usable timing.
 
-`bible_music.app.preview_passage.preview_passage` resolves a source reference in the selected edition through the Scripture lookup port. It returns the proposed song passages or the conflicting positions and legal alternatives. For offline use, `InMemoryScripture` resolves registered references from supplied editions and ranges.
+`bible_music.app.preview_passage.preview_passage` resolves a source reference in the selected edition through the Scripture lookup port. Its immutable `PassagePlanPreviewView` provides the proposed song passages or the conflicts with word context and legal alternatives. For offline use, `InMemoryScripture` resolves registered references from supplied editions and ranges.
 
 ## Offline verification
 
 The first domain operations, `TakeReview.assess` and `PassagePlan.preview`, run on normalized observations and edition-marked words. The review compares ordered lyric placements for an exact match or a uniquely located single-word omission. More complex or ambiguous observations yield an inconclusive review.
 
-Install the development tools with Python 3.13.
+Create a fresh CPython 3.13 environment and install the locked build and development dependencies. The locks include ARM64 and x86-64 artifacts for macOS and glibc Linux. [Dependency lock policy](docs/decisions/0005-reproducible-development-builds.md)
 
 ```sh
 python3.13 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install --require-hashes -r requirements-build.lock
+python -m pip install --no-build-isolation --require-hashes -r requirements-dev.lock
+python -m pip install --no-index --no-build-isolation --check-build-dependencies -e '.[dev]'
+python -m pip check
 ```
 
-Run the full offline suite with `bash scripts/check-domain.sh`. It checks behavior, formatting, lint, McCabe complexity of at most 10 per function, and inward dependencies from adapters through app to domain. The architecture checks also enforce acyclic domain imports and restrict the domain to its own package and the standard library.
+Run the full offline suite with `bash scripts/check-domain.sh`. It runs pytest, the Ruff lint and format checks, Import Linter, and Cosmic Ray. The architecture checks cover application result views, inward dependency direction, and the domain's standard-library boundary.
 
-Cosmic Ray runs the domain and app behavior tests against mutations in a fresh temporary source copy. Each module with generated mutants needs at least 95% confirmed kills. Survivors and untested mutants earn zero, and incomplete runs fail. Cosmic Ray 8.9.0 generates no mutants for the take-review forwarding function or the in-memory Scripture lookup. The app behavior tests exercise both.
+The default McCabe complexity cap is 10 per function and the default confirmed mutation kill floor is 95% per covered module. Cosmic Ray runs the behavior and architecture tests against mutations in a temporary source copy. Survivors and untested mutants earn zero, and incomplete runs fail. Cosmic Ray 8.9.0 generates no mutants for the in-memory Scripture lookup, which the application behavior tests exercise.
 
-For a focused check, select the behavior test file and the source module. The take-review tests also exercise `Take`.
-
-```sh
-python -m pytest tests/domain/test_take_review.py
-ruff check src/bible_music/domain/take_review.py
-ruff format --check src/bible_music/domain/take_review.py
-python scripts/check_mutations.py take_review
-```
+For focused verification, run the relevant test file and pass the source path to the lint or mutation command. Omit the path to check the whole project. The architecture suite combines the pytest contracts with Import Linter.
 
 ```sh
 python -m pytest tests/app/test_preview_passage.py
-ruff check src/bible_music/app/preview_passage.py
-ruff format --check src/bible_music/app/preview_passage.py
-python scripts/check_mutations.py preview_passage
+python scripts/check_lint.py src/bible_music/app/preview_passage.py
+python scripts/check_mutations.py src/bible_music/app/preview_passage.py
+python -m pytest tests/architecture
+lint-imports --no-cache
+```
+
+Set optional thresholds by repository-relative Python file path in `pyproject.toml`. For example, these entries tighten the thresholds for two modules.
+
+```toml
+[tool.bible-music.verification.mutation-overrides]
+"src/bible_music/domain/passage_plan.py" = 96
+
+[tool.bible-music.verification.complexity-overrides]
+"src/bible_music/app/review_take.py" = 8
 ```

@@ -11,16 +11,18 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = Path("src/bible_music")
-# Cosmic Ray 8.9.0 generates no mutants for these forwarding and lookup modules.
-MAY_HAVE_NO_MUTANTS = frozenset(
-    {PACKAGE / "app/review_take.py", PACKAGE / "adapters/in_memory_scripture.py"}
+from verification_config import (
+    SOURCE_PACKAGE,
+    load_verification_settings,
+    mutation_modules,
 )
-MINIMUM_KILL_PERCENT = 95
+
+ROOT = Path(__file__).resolve().parents[1]
+# Cosmic Ray 8.9.0 generates no mutants for the in-memory Scripture lookup.
+MAY_HAVE_NO_MUTANTS = frozenset({SOURCE_PACKAGE / "adapters/in_memory_scripture.py"})
 PYTEST_STATUS = "PYTEST_EXIT="
-BEHAVIOR_TESTS = ("tests/domain", "tests/app")
-PYTEST_ARGS = ["-qx", "-p", "no:cacheprovider", *BEHAVIOR_TESTS]
+MUTATION_TESTS = ("tests/domain", "tests/app", "tests/architecture")
+PYTEST_ARGS = ["-qx", "-p", "no:cacheprovider", *MUTATION_TESTS]
 
 
 def pytest_status(result):
@@ -44,7 +46,9 @@ def pytest_status(result):
             return "incomplete"
 
 
-def score_report(report, expected_modules, may_have_no_mutants=frozenset()):
+def score_report(
+    report, expected_modules, may_have_no_mutants=frozenset(), *, minimum_for
+):
     counts = defaultdict(Counter)
     for line in report.splitlines():
         job, result = json.loads(line)
@@ -68,17 +72,21 @@ def score_report(report, expected_modules, may_have_no_mutants=frozenset()):
     for module, outcomes in sorted(counts.items()):
         total = outcomes.total()
         killed = outcomes["killed"]
-        print(f"{module}: {killed}/{total} confirmed kills ({killed / total:.1%})")
-        if outcomes["incomplete"] or 100 * killed < MINIMUM_KILL_PERCENT * total:
+        floor = minimum_for(module)
+        print(
+            f"{module}: {killed}/{total} confirmed kills ({killed / total:.1%}, "
+            f"minimum {floor}%)"
+        )
+        if outcomes["incomplete"] or 100 * killed < floor * total:
             passed = False
     return passed
 
 
-def run_mutations(scope, expected_modules, workspace):
+def run_mutations(scope, expected_modules, workspace, settings):
     shutil.copytree(
         ROOT / "src", workspace / "src", ignore=shutil.ignore_patterns("__pycache__")
     )
-    for tests in BEHAVIOR_TESTS:
+    for tests in MUTATION_TESTS:
         shutil.copytree(
             ROOT / tests,
             workspace / tests,
@@ -129,22 +137,39 @@ def run_mutations(scope, expected_modules, workspace):
     report = subprocess.check_output(
         [cosmic_ray, "dump", session], cwd=workspace, env=env, text=True
     )
-    return score_report(report, expected_modules, MAY_HAVE_NO_MUTANTS)
+    return score_report(
+        report,
+        expected_modules,
+        MAY_HAVE_NO_MUTANTS,
+        minimum_for=settings.mutation_floor_for,
+    )
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    modules = {
-        path.stem: path.relative_to(ROOT)
-        for path in (ROOT / PACKAGE).rglob("*.py")
-        if path.stem != "__init__"
-    }
-    parser.add_argument("module", nargs="?", choices=sorted(modules))
+    parser.add_argument(
+        "module", nargs="?", help="repository-relative path or unique module stem"
+    )
     args = parser.parse_args()
-    scope = modules[args.module] if args.module else PACKAGE
-    expected_modules = {scope} if args.module else set(modules.values())
+    modules = mutation_modules(ROOT)
+    scope = SOURCE_PACKAGE
+    if args.module:
+        modules = {
+            module
+            for module in modules
+            if args.module in (module.as_posix(), module.stem)
+        }
+        if len(modules) != 1:
+            parser.error(
+                f"expected one module for {args.module!r}; use its repository-relative path"
+            )
+        (scope,) = modules
+    try:
+        settings = load_verification_settings(ROOT)
+    except (KeyError, ValueError) as error:
+        parser.error(str(error))
     with TemporaryDirectory(prefix="bible-music-mutations-") as directory:
-        return 0 if run_mutations(scope, expected_modules, Path(directory)) else 1
+        return 0 if run_mutations(scope, modules, Path(directory), settings) else 1
 
 
 if __name__ == "__main__":

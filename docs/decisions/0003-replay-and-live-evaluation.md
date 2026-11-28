@@ -6,7 +6,9 @@
 
 **Calibration.** The blind listener receives audio and a neutral ID only. A targeted review sees the brief, arrangement and active rubric. Withhold the adjudicated answers from both. Use held-out passages, keep the model/prompt/audio revisions and report misses, false alarms, keeper recall and producer audition time with denominators. The producer defines eligibility and weights. A rubric change requires comparable re-scoring before ranking. [Listening procedure](../workflows/listener-evaluation.md) · [Producer worksheet](../listening-rubric.md)
 
-**Gates.** Starting policy is 95% confirmed kills per covered module and cyclomatic complexity at most 10 per function. Survivors and untested mutants earn zero. Incomplete results fail. The module-local score protects a small new policy from being hidden in a large, well-tested component. Change a floor as an explicit quality decision in its configuration and both root documents.
+**Gates.** The defaults are 95% confirmed kills per covered module and cyclomatic complexity at most 10 per function. Configure justified overrides in `pyproject.toml` by repository-relative Python file path. Both full and focused commands apply the same overrides. The lint runner uses Ruff's `C901` for the configured cap and runs the other lint and formatting checks on the same scope.
+
+**Mutation evidence.** Cosmic Ray runs the offline behavior and architecture tests in a temporary source copy. Survivors and untested mutants earn zero, and incomplete results fail at every threshold. Report a module with zero generated mutants separately. Reporting per module protects a small new policy from being hidden in a large, well-tested component. Record the reason for an override with its configuration. Keep both root documents in sync when changing a default.
 
 ## Acceptance examples to implement
 

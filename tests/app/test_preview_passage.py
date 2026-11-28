@@ -2,9 +2,17 @@ import pytest
 
 from bible_music.adapters.in_memory_scripture import InMemoryScripture
 from bible_music.app.preview_passage import PassageNotFound, preview_passage
+from bible_music.app.views import (
+    BoundaryConflictKindView,
+    BoundaryConflictView,
+    PassagePlanPreviewView,
+    ScriptureRangeView,
+    ScriptureWordView,
+    SongBoundaryView,
+    WordEndingView,
+)
 from bible_music.domain.passage_plan import (
     BibleEdition,
-    BoundaryConflictKind,
     PermittedEnding,
     ScriptureWord,
     SongBoundaryPolicy,
@@ -63,11 +71,26 @@ def test_producer_previews_a_source_passage_pinned_at_a_semicolon(scripture):
         pins=frozenset({8}),
     )
 
-    assert preview.conflicts == ()
-    assert preview.pins == frozenset({8})
-    assert preview.song_passages == (
-        ScriptureRange("synthetic", 0, 8),
-        ScriptureRange("synthetic", 8, 21),
+    assert preview == PassagePlanPreviewView(
+        source=ScriptureRangeView("synthetic", 0, 21),
+        pins=frozenset({8}),
+        legal_cuts=(
+            SongBoundaryView(
+                8,
+                ScriptureWordView("river;", "1:2", WordEndingView.SEMICOLON, True),
+                ScriptureWordView("then", "1:3", WordEndingView.OTHER, False),
+            ),
+            SongBoundaryView(
+                17,
+                ScriptureWordView("listened.", "1:3", WordEndingView.SENTENCE, True),
+                ScriptureWordView("Dr.", "1:4", WordEndingView.OTHER, False),
+            ),
+        ),
+        song_passages=(
+            ScriptureRangeView("synthetic", 0, 8),
+            ScriptureRangeView("synthetic", 8, 21),
+        ),
+        conflicts=(),
     )
 
 
@@ -83,13 +106,26 @@ def test_producer_sees_a_conflicting_pin_and_can_keep_it_for_revision(scripture)
 
     assert preview.pins == frozenset({8})
     assert preview.song_passages == ()
-    (conflict,) = preview.conflicts
-    assert (conflict.kind, conflict.position) == (BoundaryConflictKind.PIN, 8)
-    assert (conflict.boundary.before.text, conflict.boundary.after.text) == (
-        "river;",
-        "then",
+    assert preview.conflicts == (
+        BoundaryConflictView(
+            BoundaryConflictKindView.PIN,
+            8,
+            SongBoundaryView(
+                8,
+                ScriptureWordView("river;", "1:2", WordEndingView.SEMICOLON, True),
+                ScriptureWordView("then", "1:3", WordEndingView.OTHER, False),
+            ),
+            (
+                SongBoundaryView(
+                    17,
+                    ScriptureWordView(
+                        "listened.", "1:3", WordEndingView.SENTENCE, True
+                    ),
+                    ScriptureWordView("Dr.", "1:4", WordEndingView.OTHER, False),
+                ),
+            ),
+        ),
     )
-    assert [boundary.position for boundary in conflict.legal_alternatives] == [17]
 
 
 def test_producer_sees_an_illegal_source_endpoint_even_without_any_cuts(scripture):
@@ -103,7 +139,10 @@ def test_producer_sees_an_illegal_source_endpoint_even_without_any_cuts(scriptur
 
     assert preview.song_passages == ()
     (conflict,) = preview.conflicts
-    assert (conflict.kind, conflict.position) == (BoundaryConflictKind.SOURCE_END, 5)
+    assert (conflict.kind, conflict.position) == (
+        BoundaryConflictKindView.SOURCE_END,
+        5,
+    )
     assert conflict.boundary.before.text == "gathered"
     assert [boundary.position for boundary in conflict.legal_alternatives] == [12]
 
@@ -142,7 +181,34 @@ def test_producer_previews_an_artists_proposed_cut_alongside_a_pin(scripture):
 
     assert preview.conflicts == ()
     assert preview.song_passages == (
-        ScriptureRange("synthetic", 0, 8),
-        ScriptureRange("synthetic", 8, 12),
-        ScriptureRange("synthetic", 12, 21),
+        ScriptureRangeView("synthetic", 0, 8),
+        ScriptureRangeView("synthetic", 8, 12),
+        ScriptureRangeView("synthetic", 12, 21),
+    )
+
+
+def test_producer_can_see_conflicts_with_partial_or_missing_boundary_context(scripture):
+    preview = preview_passage(
+        scripture,
+        edition_id="synthetic",
+        reference="1:1–1:4",
+        plan_id="plan",
+        policy=SongBoundaryPolicy(PermittedEnding.SENTENCE, require_verse_end=True),
+        cuts=frozenset({0, 21}),
+    )
+
+    assert preview.conflicts == (
+        BoundaryConflictView(
+            BoundaryConflictKindView.PROPOSED_CUT, 0, None, preview.legal_cuts
+        ),
+        BoundaryConflictView(
+            BoundaryConflictKindView.PROPOSED_CUT,
+            21,
+            SongBoundaryView(
+                21,
+                ScriptureWordView("“Ready?”", "1:4", WordEndingView.SENTENCE, True),
+                None,
+            ),
+            preview.legal_cuts,
+        ),
     )

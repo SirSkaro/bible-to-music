@@ -1,5 +1,6 @@
 import json
 import runpy
+from functools import partial
 from pathlib import Path
 
 import pytest
@@ -19,10 +20,13 @@ SURVIVOR = {
 UNTESTED = {**CONFIRMED, "output": "PYTEST_EXIT=5\n"}
 
 
-@pytest.fixture(scope="module")
-def score_report():
+@pytest.fixture
+def score_report(monkeypatch):
     script = Path(__file__).resolve().parents[2] / "scripts" / "check_mutations.py"
-    return runpy.run_path(str(script))["score_report"]
+    monkeypatch.syspath_prepend(str(script.parent))
+    return partial(
+        runpy.run_path(str(script))["score_report"], minimum_for=lambda _: 95
+    )
 
 
 def session_report(results):
@@ -70,11 +74,26 @@ def test_mutation_gate_does_not_average_modules(score_report):
     assert not score_report(report, {REVIEW, PLAN})
 
 
+def test_each_module_is_scored_against_its_own_floor(score_report):
+    report = session_report(
+        [(REVIEW, CONFIRMED)] * 9
+        + [(REVIEW, SURVIVOR)]
+        + [(PLAN, CONFIRMED)] * 19
+        + [(PLAN, UNTESTED)]
+    )
+    assert score_report(
+        report, {REVIEW, PLAN}, minimum_for={REVIEW: 90, PLAN: 95}.__getitem__
+    )
+    assert not score_report(
+        report, {REVIEW, PLAN}, minimum_for={REVIEW: 90, PLAN: 96}.__getitem__
+    )
+
+
 def test_gate_requires_results_for_the_selected_module(score_report):
     assert not score_report("", {REVIEW})
 
 
 def test_a_module_without_mutable_operators_can_have_an_empty_report(score_report):
-    wrapper = Path("src/bible_music/app/review_take.py")
+    wrapper = Path("src/bible_music/adapters/in_memory_scripture.py")
     assert score_report("", {wrapper}, {wrapper})
     assert not score_report(session_report([(wrapper, None)]), {wrapper}, {wrapper})
