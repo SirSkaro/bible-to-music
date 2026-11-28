@@ -5,13 +5,14 @@ from bible_music.domain.passage_plan import (
     BoundaryConflict,
     BoundaryConflictKind,
     PassagePlan,
+    PassagePlanPreview,
     ScriptureWord,
     SongBoundary,
-    SongBoundaryPolicy,
     WordEnding,
 )
 from bible_music.domain.scripture import ScriptureRange
 
+from .commands import PreviewPassageCommand
 from .views import (
     BoundaryConflictKindView,
     BoundaryConflictView,
@@ -46,26 +47,28 @@ class ScriptureLookup(Protocol):
         ...
 
 
-def preview_passage(
-    scripture: ScriptureLookup,
-    edition_id: str,
-    reference: str,
-    plan_id: str,
-    policy: SongBoundaryPolicy,
-    pins: frozenset[int] = frozenset(),
-    cuts: frozenset[int] = frozenset(),
-) -> PassagePlanPreviewView:
-    """Preview a plan with cuts expressed as word positions in the selected edition."""
-    try:
-        edition, source = scripture.resolve(edition_id, reference)
-    except KeyError:
-        raise PassageNotFound(
-            f"Passage {reference!r} was not found in Bible edition {edition_id!r}."
-        ) from None
-    preview = PassagePlan(plan_id, source, policy, pins).preview(edition, cuts)
+class PreviewPassage:
+    def __init__(self, scripture: ScriptureLookup) -> None:
+        self._scripture = scripture
+
+    def __call__(self, command: PreviewPassageCommand) -> PassagePlanPreviewView:
+        """Preview a plan with cuts expressed as word positions in the selected edition."""
+        try:
+            edition, source = self._scripture.resolve(
+                command.edition_id, command.reference
+            )
+        except KeyError:
+            raise PassageNotFound(
+                f"Passage {command.reference!r} was not found in Bible edition {command.edition_id!r}."
+            ) from None
+        plan = PassagePlan(command.plan_id, source, command.policy, command.pins)
+        return _preview_view(plan.preview(edition, command.cuts))
+
+
+def _preview_view(preview: PassagePlanPreview) -> PassagePlanPreviewView:
     return PassagePlanPreviewView(
         source=_range_view(preview.source),
-        pins=preview.pins,
+        pins=frozenset(preview.pins),
         legal_cuts=tuple(_boundary_view(cut) for cut in preview.legal_cuts),
         song_passages=tuple(_range_view(passage) for passage in preview.song_passages),
         conflicts=tuple(_conflict_view(conflict) for conflict in preview.conflicts),

@@ -266,7 +266,7 @@
         <mxCell id="review-take" parent="1" edge="1" source="review" target="take" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=open;endFill=0;endSize=9;strokeWidth=1.6;strokeColor=#476B71;orthogonalLoop=1;exitX=0.5;exitY=0;exitPerimeter=0;entryX=0.5;entryY=1;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="review-take-label" value="1 take ID&#10;+ revision key" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#345761;fontSize=13;fontStyle=0;connectable=0;align=center;fillColor=#FFFFFF;">
+        <mxCell id="review-take-label" value="1 audio revision reference&#10;(take ID + revision key)" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;spacing=0;spacingLeft=0;spacingRight=0;fontFamily=Helvetica;fontColor=#345761;fontSize=13;fontStyle=0;connectable=0;align=center;fillColor=#FFFFFF;">
           <mxGeometry as="geometry" x="1322" y="463" width="150" height="38" />
         </mxCell>
         <mxCell id="finalists-review" parent="1" edge="1" source="finalists" target="review" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=open;endFill=0;endSize=9;strokeWidth=1.6;strokeColor=#476B71;orthogonalLoop=1;exitX=1;exitY=0.53;exitPerimeter=0;entryX=0;entryY=0.53;entryPerimeter=0;">

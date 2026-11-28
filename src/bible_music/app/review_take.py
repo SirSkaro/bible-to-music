@@ -1,15 +1,17 @@
+from typing import Protocol
+
 from bible_music.domain.arrangement import Arrangement
-from bible_music.domain.take import Take
+from bible_music.domain.take import AudioRevisionRef, Take
 from bible_music.domain.take_review import (
     EvidenceSource,
     Finding,
-    ListenerObservation,
     ObservedWord,
     ReviewOutcome,
     TakeReview,
     TimingPrecision,
 )
 
+from .commands import ReviewTakeCommand
 from .views import (
     AuditionWindowView,
     EvidenceSourceView,
@@ -36,14 +38,38 @@ _PRECISIONS = {
 }
 
 
-def review_take(
-    review_id: str,
-    take: Take,
-    arrangement: Arrangement,
-    observation: ListenerObservation,
-) -> TakeReviewView:
-    """Review an imported take using a recorded listener observation."""
-    review = TakeReview.assess(review_id, take, arrangement, observation)
+class TakeReviewInputNotFound(LookupError):
+    """The requested take or its arrangement revision is unavailable."""
+
+
+class TakeReviewLookup(Protocol):
+    def load(self, audio_revision: AudioRevisionRef) -> tuple[Take, Arrangement]:
+        """Read the exact take and arrangement or raise KeyError."""
+        ...
+
+
+class ReviewTake:
+    def __init__(self, lookup: TakeReviewLookup) -> None:
+        self._lookup = lookup
+
+    def __call__(self, command: ReviewTakeCommand) -> TakeReviewView:
+        """Review an imported take using a recorded listener observation."""
+        revision = command.audio_revision
+        if revision != command.observation.audio_revision:
+            raise ValueError("The observation belongs to a different audio revision.")
+        try:
+            take, arrangement = self._lookup.load(revision)
+        except KeyError:
+            raise TakeReviewInputNotFound(
+                f"Take {revision.take_id!r}, audio revision {revision.revision!r}, "
+                "or its arrangement is unavailable."
+            ) from None
+        return _review_view(
+            TakeReview.assess(command.review_id, take, arrangement, command.observation)
+        )
+
+
+def _review_view(review: TakeReview) -> TakeReviewView:
     return TakeReviewView(
         review_id=review.review_id,
         take_id=review.audio_revision.take_id,

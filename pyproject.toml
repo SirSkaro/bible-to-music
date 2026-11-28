@@ -37,7 +37,7 @@ minimum-kill-percent = 95
 target-version = "py313"
 
 [tool.ruff.lint]
-select = ["B", "C901", "E4", "E7", "E9", "F", "I", "UP"]
+select = ["ANN", "B", "C901", "E4", "E7", "E9", "F", "I", "UP"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10

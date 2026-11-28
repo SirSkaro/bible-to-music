@@ -20,7 +20,9 @@ An aggregate root owns the invariants that must hold in a single change. The **p
 
 Use a Python modular monolith. The domain makes decisions. Application use cases orchestrate them and own the ports they call. PySide6 is a driving adapter. Mureka, the listener, local SoundCraft editing, SQLite, file storage and credentials are driven adapters. The composition root wires implementations. Source dependencies point inward even when runtime control flows out to an injected provider.
 
-Public application use cases return immutable application views. Map the result and its nested values at the application boundary. Assert the view fields in public use-case tests and use the architecture tests to check the declared result types. [ADR 0001](docs/decisions/0001-python-modular-monolith.md)
+Public application use cases accept one immutable command and return an immutable application view. Commands can name aggregates by reference and reuse approved domain value objects. Validate required view fields for presence and leave business invariants in the domain. Exercise the command and view contracts through public use-case tests and the architecture suite. [ADR 0001](docs/decisions/0001-python-modular-monolith.md)
+
+Annotate parameters, return types, and contract fields across source, tests, and scripts. The containing class supplies the types of `self` and `cls`. [ADR 0006](docs/decisions/0006-python-type-hints.md)
 
 Kent Beck’s **features and futures** both matter in review. After the feature passes, inspect the next concrete change it makes likely. For example, ask what a second listening model would force you to edit. If a provider field leaks into omission policy, translate it at the adapter now and rerun the same acceptance example. Defer general extension machinery until a real second use warrants it. [Kent Beck, Features Versus Futures, 13:45](https://www.youtube.com/watch?v=AZn7JZiNetA&t=825s) · [Why Does Development Slow?](https://newsletter.kentbeck.com/p/why-does-development-slow)
 
@@ -72,6 +74,7 @@ The defaults are a 95% confirmed mutation kill floor per covered module and a Mc
 | Billable work, retry, repair, resumption, persistence or a new workflow branch | [ADR 0002](docs/decisions/0002-replaceable-workflow-steps.md) and [production workflow](docs/workflows/production.md) for operation identity, limits and routing. |
 | A change in a test gate, listener inputs, rubric or evaluation method | [ADR 0003](docs/decisions/0003-replay-and-live-evaluation.md) for the boundary between software evidence and listening evidence. |
 | Dependency pins, lock files or verification platforms | [ADR 0005](docs/decisions/0005-reproducible-development-builds.md) for the locked environment and update procedure. |
+| Python annotations or type-checking policy | [ADR 0006](docs/decisions/0006-python-type-hints.md) for coverage and verification. |
 | Cut positions, creative authority, authorized lyrics or finalist eligibility | [ADR 0004](docs/decisions/0004-song-passages-and-creative-authority.md) for conflicts, fixed choices and selection. |
 | Implementing or repairing an observable behavior | [Local TDD skill](.agents/skills/tdd/SKILL.md). Use a public use case, aggregate or adapter contract. Take one failing example through green and refactor. |
 | Implementing a durable LangGraph adapter | [Local LangChain skill](.agents/skills/langchain-build-agent/SKILL.md). Verify APIs against the installed, locked package. The application owns business transitions. |

@@ -1,6 +1,7 @@
 """Read the thresholds shared by the offline verification commands."""
 
 import tomllib
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -44,7 +45,13 @@ def load_verification_settings(root: Path) -> VerificationSettings:
     return VerificationSettings(floor, mutation, complexity)
 
 
-def _overrides(root, config, name, minimum, maximum=None):
+def _overrides(
+    root: Path,
+    config: Mapping[str, object],
+    name: str,
+    minimum: int,
+    maximum: int | None = None,
+) -> dict[Path, int]:
     table = config.get(name, {})
     if not isinstance(table, dict):
         raise ValueError(f"{name} must be a table of module paths and thresholds")
@@ -67,7 +74,9 @@ def _overrides(root, config, name, minimum, maximum=None):
     return overrides
 
 
-def _threshold(value, name, minimum, maximum=None):
+def _threshold(
+    value: object, name: str, minimum: int, maximum: int | None = None
+) -> int:
     if (
         type(value) is not int
         or value < minimum

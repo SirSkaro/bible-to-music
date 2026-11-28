@@ -1,7 +1,30 @@
 """Immutable results for callers of the application use cases."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from enum import StrEnum
+from types import NoneType
+from typing import cast, get_args, get_origin, get_type_hints
+
+
+class _View:
+    def __post_init__(self) -> None:
+        annotations = get_type_hints(type(self))
+        for field in fields(type(self)):
+            _require_value(
+                getattr(self, field.name),
+                annotations[field.name],
+                f"{type(self).__name__}.{field.name}",
+            )
+
+
+def _require_value(value: object, annotation: object, field_path: str) -> None:
+    if isinstance(value, NoneType):
+        if NoneType not in get_args(annotation):
+            raise TypeError(f"{field_path} requires a value")
+    elif get_origin(annotation) in (tuple, frozenset):
+        item_type = next(iter(get_args(annotation)))
+        for item in cast(tuple[object, ...] | frozenset[object], value):
+            _require_value(item, item_type, field_path)
 
 
 class ReviewOutcomeView(StrEnum):
@@ -22,14 +45,14 @@ class TimingPrecisionView(StrEnum):
 
 
 @dataclass(frozen=True)
-class AuditionWindowView:
+class AuditionWindowView(_View):
     start_ms: int
     end_ms: int
     precision: TimingPrecisionView
 
 
 @dataclass(frozen=True)
-class FindingView:
+class FindingView(_View):
     omitted_word: str
     source_word_index: int
     placement_index: int
@@ -37,7 +60,7 @@ class FindingView:
 
 
 @dataclass(frozen=True)
-class ObservedWordView:
+class ObservedWordView(_View):
     text: str
     start_ms: int | None
     end_ms: int | None
@@ -45,7 +68,7 @@ class ObservedWordView:
 
 
 @dataclass(frozen=True)
-class TakeReviewView:
+class TakeReviewView(_View):
     review_id: str
     take_id: str
     audio_revision: str
@@ -71,7 +94,7 @@ class BoundaryConflictKindView(StrEnum):
 
 
 @dataclass(frozen=True)
-class ScriptureRangeView:
+class ScriptureRangeView(_View):
     """An edition and its half-open range of word positions."""
 
     edition: str
@@ -80,7 +103,7 @@ class ScriptureRangeView:
 
 
 @dataclass(frozen=True)
-class ScriptureWordView:
+class ScriptureWordView(_View):
     text: str
     verse: str
     ending: WordEndingView
@@ -88,14 +111,14 @@ class ScriptureWordView:
 
 
 @dataclass(frozen=True)
-class SongBoundaryView:
+class SongBoundaryView(_View):
     position: int
     before: ScriptureWordView
     after: ScriptureWordView | None
 
 
 @dataclass(frozen=True)
-class BoundaryConflictView:
+class BoundaryConflictView(_View):
     kind: BoundaryConflictKindView
     position: int
     boundary: SongBoundaryView | None
@@ -103,7 +126,7 @@ class BoundaryConflictView:
 
 
 @dataclass(frozen=True)
-class PassagePlanPreviewView:
+class PassagePlanPreviewView(_View):
     source: ScriptureRangeView
     pins: frozenset[int]
     legal_cuts: tuple[SongBoundaryView, ...]

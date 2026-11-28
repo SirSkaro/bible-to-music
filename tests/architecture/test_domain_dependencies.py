@@ -1,4 +1,5 @@
 import ast
+from collections.abc import Iterator
 from importlib.util import resolve_name
 from pathlib import Path
 from sys import stdlib_module_names
@@ -8,7 +9,7 @@ PACKAGE = ROOT / "src" / "bible_music"
 DOMAIN = "bible_music.domain"
 
 
-def imports_in(path):
+def imports_in(path: Path) -> Iterator[tuple[int, str]]:
     package = ".".join(path.parent.relative_to(PACKAGE.parent).parts)
     for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
         if isinstance(node, ast.Import):
@@ -18,7 +19,7 @@ def imports_in(path):
             yield node.lineno, resolve_name(name, package)
 
 
-def test_domain_imports_only_the_standard_library_and_the_domain():
+def test_domain_imports_only_the_standard_library_and_the_domain() -> None:
     paths = [PACKAGE / "__init__.py", *(PACKAGE / "domain").rglob("*.py")]
     forbidden = [
         f"{path.relative_to(ROOT)}:{line} imports {module}"

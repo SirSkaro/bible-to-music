@@ -15,7 +15,7 @@ from bible_music.domain.scripture import ScriptureRange
 
 
 @pytest.fixture
-def edition():
+def edition() -> BibleEdition:
     return BibleEdition(
         "synthetic",
         (
@@ -44,7 +44,7 @@ def edition():
     )
 
 
-def test_producer_pins_a_semicolon_at_a_verse_end(edition):
+def test_producer_pins_a_semicolon_at_a_verse_end(edition: BibleEdition) -> None:
     plan = PassagePlan(
         "plan",
         ScriptureRange(edition.id, 0, 21),
@@ -65,7 +65,9 @@ def test_producer_pins_a_semicolon_at_a_verse_end(edition):
     )
 
 
-def test_switching_to_sentence_endings_reports_the_pin_and_leaves_it_in_place(edition):
+def test_switching_to_sentence_endings_reports_the_pin_and_leaves_it_in_place(
+    edition: BibleEdition,
+) -> None:
     source = ScriptureRange(edition.id, 0, 21)
     plan = PassagePlan(
         "plan",
@@ -89,7 +91,9 @@ def test_switching_to_sentence_endings_reports_the_pin_and_leaves_it_in_place(ed
 
 
 @pytest.mark.parametrize("pin", [False, True])
-def test_a_sentence_can_end_inside_a_verse_unless_a_verse_end_is_required(edition, pin):
+def test_a_sentence_can_end_inside_a_verse_unless_a_verse_end_is_required(
+    edition: BibleEdition, pin: bool
+) -> None:
     source = ScriptureRange(edition.id, 0, 21)
     pinned = frozenset({12}) if pin else frozenset()
     proposed = frozenset() if pin else frozenset({12})
@@ -125,7 +129,9 @@ def test_a_sentence_can_end_inside_a_verse_unless_a_verse_end_is_required(editio
     assert [cut.position for cut in conflict.legal_alternatives] == [17]
 
 
-def test_source_ending_mid_sentence_is_invalid_with_no_internal_cuts(edition):
+def test_source_ending_mid_sentence_is_invalid_with_no_internal_cuts(
+    edition: BibleEdition,
+) -> None:
     plan = PassagePlan(
         "plan",
         ScriptureRange(edition.id, 0, 5),
@@ -144,7 +150,9 @@ def test_source_ending_mid_sentence_is_invalid_with_no_internal_cuts(edition):
     assert [cut.position for cut in conflict.legal_alternatives] == [12]
 
 
-def test_a_valid_source_fits_in_one_song_even_when_earlier_endings_are_legal(edition):
+def test_a_valid_source_fits_in_one_song_even_when_earlier_endings_are_legal(
+    edition: BibleEdition,
+) -> None:
     source = ScriptureRange(edition.id, 0, 17)
     plan = PassagePlan(
         "plan",
@@ -173,8 +181,11 @@ def test_a_valid_source_fits_in_one_song_even_when_earlier_endings_are_legal(edi
     ],
 )
 def test_preview_uses_edition_endings_including_abbreviations_and_quoted_questions(
-    edition, ending, verse_required, positions
-):
+    edition: BibleEdition,
+    ending: PermittedEnding,
+    verse_required: bool,
+    positions: list[int],
+) -> None:
     plan = PassagePlan(
         "plan",
         ScriptureRange(edition.id, 0, 21),
@@ -187,7 +198,9 @@ def test_preview_uses_edition_endings_including_abbreviations_and_quoted_questio
     assert edition.boundary_at(21).after is None
 
 
-def test_preview_partitions_a_source_that_starts_mid_verse(edition):
+def test_preview_partitions_a_source_that_starts_mid_verse(
+    edition: BibleEdition,
+) -> None:
     source = ScriptureRange(edition.id, 6, 17)
     plan = PassagePlan(
         "plan",
@@ -207,8 +220,8 @@ def test_preview_partitions_a_source_that_starts_mid_verse(edition):
 
 
 def test_preview_reports_all_out_of_range_cuts_and_the_invalid_terminal_endpoint(
-    edition,
-):
+    edition: BibleEdition,
+) -> None:
     plan = PassagePlan(
         "plan",
         ScriptureRange(edition.id, 2, 14),
@@ -240,8 +253,8 @@ def test_preview_reports_all_out_of_range_cuts_and_the_invalid_terminal_endpoint
 
 
 def test_invalid_end_at_the_end_of_the_loaded_edition_has_only_earlier_alternatives(
-    edition,
-):
+    edition: BibleEdition,
+) -> None:
     edition = BibleEdition(edition.id, edition.words[:14])
     plan = PassagePlan(
         "plan",
@@ -253,7 +266,9 @@ def test_invalid_end_at_the_end_of_the_loaded_edition_has_only_earlier_alternati
 
 
 @pytest.mark.parametrize("source", [("other", 0, 21), ("synthetic", 0, 22)])
-def test_preview_requires_a_source_range_in_the_selected_edition(edition, source):
+def test_preview_requires_a_source_range_in_the_selected_edition(
+    edition: BibleEdition, source: tuple[str, int, int]
+) -> None:
     plan = PassagePlan(
         "plan", ScriptureRange(*source), SongBoundaryPolicy(PermittedEnding.ANY_WORD)
     )
@@ -261,7 +276,9 @@ def test_preview_requires_a_source_range_in_the_selected_edition(edition, source
         plan.preview(edition)
 
 
-def test_only_the_edition_value_needs_to_match_the_source(edition):
+def test_only_the_edition_value_needs_to_match_the_source(
+    edition: BibleEdition,
+) -> None:
     source = ScriptureRange(b"synthetic".decode(), 0, 21)
     plan = PassagePlan("plan", source, SongBoundaryPolicy(PermittedEnding.SENTENCE))
     assert plan.preview(edition).song_passages == (source,)
@@ -270,8 +287,8 @@ def test_only_the_edition_value_needs_to_match_the_source(edition):
 
 
 def test_preview_can_suggest_the_final_word_of_an_edition_for_an_earlier_invalid_end(
-    edition,
-):
+    edition: BibleEdition,
+) -> None:
     plan = PassagePlan(
         "plan",
         ScriptureRange(edition.id, 17, 20),
@@ -286,7 +303,9 @@ def test_preview_can_suggest_the_final_word_of_an_edition_for_an_earlier_invalid
     )
 
 
-def test_the_first_word_has_its_own_boundary_and_adjacent_context(edition):
+def test_the_first_word_has_its_own_boundary_and_adjacent_context(
+    edition: BibleEdition,
+) -> None:
     boundary = edition.boundary_at(1)
     assert (boundary.position, boundary.before.text, boundary.after.text) == (
         1,
@@ -295,14 +314,16 @@ def test_the_first_word_has_its_own_boundary_and_adjacent_context(edition):
     )
 
 
-def test_the_final_boundary_of_a_long_edition_has_no_following_word():
+def test_the_final_boundary_of_a_long_edition_has_no_following_word() -> None:
     words = (ScriptureWord("word", "1:1"),) * 300
     edition = BibleEdition("synthetic", words)
     position = int("300")
     assert edition.boundary_at(position).after is None
 
 
-def test_the_plan_and_preview_keep_immutable_positions_and_conflict_evidence(edition):
+def test_the_plan_and_preview_keep_immutable_positions_and_conflict_evidence(
+    edition: BibleEdition,
+) -> None:
     plan = PassagePlan(
         "plan",
         ScriptureRange(edition.id, 0, 21),

@@ -8,24 +8,39 @@ import shutil
 import subprocess
 import sys
 from collections import Counter, defaultdict
+from collections.abc import Callable, Set
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import TypedDict
 
 from verification_config import (
     SOURCE_PACKAGE,
+    VerificationSettings,
     load_verification_settings,
     mutation_modules,
 )
 
+
+class MutationResult(TypedDict):
+    worker_outcome: str
+    test_outcome: str
+    output: str | None
+
+
 ROOT = Path(__file__).resolve().parents[1]
-# Cosmic Ray 8.9.0 generates no mutants for the in-memory Scripture lookup.
-MAY_HAVE_NO_MUTANTS = frozenset({SOURCE_PACKAGE / "adapters/in_memory_scripture.py"})
+# Cosmic Ray 8.9.0 generates no mutants for these in-memory lookups.
+MAY_HAVE_NO_MUTANTS = frozenset(
+    {
+        SOURCE_PACKAGE / "adapters/in_memory_scripture.py",
+        SOURCE_PACKAGE / "adapters/in_memory_take_review.py",
+    }
+)
 PYTEST_STATUS = "PYTEST_EXIT="
 MUTATION_TESTS = ("tests/domain", "tests/app", "tests/architecture")
 PYTEST_ARGS = ["-qx", "-p", "no:cacheprovider", *MUTATION_TESTS]
 
 
-def pytest_status(result):
+def pytest_status(result: MutationResult | None) -> str:
     if result is None:
         return "incomplete"
     if result["worker_outcome"] in {"no-test", "skipped"}:
@@ -47,8 +62,12 @@ def pytest_status(result):
 
 
 def score_report(
-    report, expected_modules, may_have_no_mutants=frozenset(), *, minimum_for
-):
+    report: str,
+    expected_modules: Set[Path],
+    may_have_no_mutants: Set[Path] = frozenset(),
+    *,
+    minimum_for: Callable[[Path], int],
+) -> bool:
     counts = defaultdict(Counter)
     for line in report.splitlines():
         job, result = json.loads(line)
@@ -82,7 +101,12 @@ def score_report(
     return passed
 
 
-def run_mutations(scope, expected_modules, workspace, settings):
+def run_mutations(
+    scope: Path,
+    expected_modules: Set[Path],
+    workspace: Path,
+    settings: VerificationSettings,
+) -> bool:
     shutil.copytree(
         ROOT / "src", workspace / "src", ignore=shutil.ignore_patterns("__pycache__")
     )
@@ -145,7 +169,7 @@ def run_mutations(scope, expected_modules, workspace, settings):
     )
 
 
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "module", nargs="?", help="repository-relative path or unique module stem"

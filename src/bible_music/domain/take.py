@@ -4,7 +4,9 @@ from .arrangement import ArrangementRevision
 
 
 @dataclass(frozen=True)
-class AudioRevision:
+class AudioRevisionRef:
+    """The take identity and key of one exact audio revision."""
+
     take_id: str
     revision: str
 
@@ -12,4 +14,4 @@ class AudioRevision:
 @dataclass(frozen=True)
 class Take:
     arrangement_revision: ArrangementRevision
-    original_audio: AudioRevision
+    original_audio: AudioRevisionRef

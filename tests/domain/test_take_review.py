@@ -13,7 +13,7 @@ from bible_music.domain.scripture import (
     ScriptureRange,
     SongPassage,
 )
-from bible_music.domain.take import AudioRevision, Take
+from bible_music.domain.take import AudioRevisionRef, Take
 from bible_music.domain.take_review import (
     AuditionWindow,
     EvidenceSource,
@@ -27,7 +27,9 @@ from bible_music.domain.take_review import (
 )
 
 
-def test_take_review_locates_a_missing_lead_word_and_accepts_the_repeated_chorus():
+def test_take_review_locates_a_missing_lead_word_and_accepts_the_repeated_chorus() -> (
+    None
+):
     song = SongPassage(
         PassagePlanRevision("plan", "1"), ScriptureRange("synthetic", 10, 16)
     )
@@ -40,7 +42,7 @@ def test_take_review_locates_a_missing_lead_word_and_accepts_the_repeated_chorus
         ("we", "sing", "with", "joy", "give", "thanks"),
         (lead, chorus, repeat),
     )
-    take = Take(arrangement.revision, AudioRevision("take", "original"))
+    take = Take(arrangement.revision, AudioRevisionRef("take", "original"))
     observation = ListenerObservation(
         take.original_audio,
         "synthetic listener",
@@ -71,7 +73,7 @@ def test_take_review_locates_a_missing_lead_word_and_accepts_the_repeated_chorus
 
 
 @pytest.fixture
-def arrangement():
+def arrangement() -> Arrangement:
     passage = SongPassage(
         PassagePlanRevision("plan", "1"), ScriptureRange("synthetic", 300, 303)
     )
@@ -83,15 +85,19 @@ def arrangement():
     )
 
 
-def assess_words(arrangement, words):
-    take = Take(arrangement.revision, AudioRevision("take", "original"))
+def assess_words(
+    arrangement: Arrangement, words: tuple[ObservedWord, ...]
+) -> TakeReview:
+    take = Take(arrangement.revision, AudioRevisionRef("take", "original"))
     observation = ListenerObservation(
         take.original_audio, "listener", EvidenceSource.FULL_MIX, words
     )
     return TakeReview.assess("review", take, arrangement, observation)
 
 
-def test_review_accepts_both_placements_of_a_repeated_chorus(arrangement):
+def test_review_accepts_both_placements_of_a_repeated_chorus(
+    arrangement: Arrangement,
+) -> None:
     first = replace(arrangement.placements[0], section="chorus")
     repeated = replace(arrangement, placements=(first, replace(first, repeat=True)))
     review = assess_words(
@@ -116,8 +122,8 @@ def test_review_accepts_both_placements_of_a_repeated_chorus(arrangement):
     ],
 )
 def test_review_leaves_an_ambiguous_or_more_complex_difference_inconclusive(
-    arrangement, heard, expected
-):
+    arrangement: Arrangement, heard: tuple[str, ...], expected: tuple[str, ...]
+) -> None:
     arrangement = replace(arrangement, scripture_words=expected)
     review = assess_words(arrangement, tuple(ObservedWord(word) for word in heard))
     assert (review.outcome, review.findings) == (ReviewOutcome.INCONCLUSIVE, ())
@@ -134,8 +140,10 @@ def test_review_leaves_an_ambiguous_or_more_complex_difference_inconclusive(
     ],
 )
 def test_review_preserves_an_omission_without_usable_neighbor_timing(
-    arrangement, observed, omission
-):
+    arrangement: Arrangement,
+    observed: tuple[tuple[str, tuple[int, int] | None], ...],
+    omission: str,
+) -> None:
     heard = tuple(
         ObservedWord(word, TimeSpan(*timing) if timing else None)
         for word, timing in observed
@@ -147,8 +155,8 @@ def test_review_preserves_an_omission_without_usable_neighbor_timing(
 
 
 def test_review_can_infer_a_phrase_window_when_the_observed_intervals_touch(
-    arrangement,
-):
+    arrangement: Arrangement,
+) -> None:
     review = assess_words(
         arrangement,
         (ObservedWord("we", TimeSpan(0, 10)), ObservedWord("softly", TimeSpan(10, 20))),
@@ -159,15 +167,19 @@ def test_review_can_infer_a_phrase_window_when_the_observed_intervals_touch(
 
 
 @pytest.mark.parametrize("bounds", [(-1, 1), (1, 1), (2, 1)])
-def test_word_timing_requires_a_positive_interval_from_a_nonnegative_start(bounds):
+def test_word_timing_requires_a_positive_interval_from_a_nonnegative_start(
+    bounds: tuple[int, int],
+) -> None:
     with pytest.raises(ValueError, match="ordered nonnegative bounds"):
         TimeSpan(*bounds)
 
 
-def test_review_rejects_an_observation_for_a_different_audio_revision(arrangement):
-    take = Take(arrangement.revision, AudioRevision("take", "original"))
+def test_review_rejects_an_observation_for_a_different_audio_revision(
+    arrangement: Arrangement,
+) -> None:
+    take = Take(arrangement.revision, AudioRevisionRef("take", "original"))
     observation = ListenerObservation(
-        AudioRevision("take", "repair"),
+        AudioRevisionRef("take", "repair"),
         "listener",
         EvidenceSource.ISOLATED_VOCAL,
         (),
@@ -176,10 +188,12 @@ def test_review_rejects_an_observation_for_a_different_audio_revision(arrangemen
         TakeReview.assess("review", take, arrangement, observation)
 
 
-def test_review_rejects_a_different_arrangement_revision(arrangement):
+def test_review_rejects_a_different_arrangement_revision(
+    arrangement: Arrangement,
+) -> None:
     take = Take(
         ArrangementRevision(arrangement.revision.arrangement_id, "2"),
-        AudioRevision("take", "original"),
+        AudioRevisionRef("take", "original"),
     )
     observation = ListenerObservation(
         take.original_audio, "listener", EvidenceSource.FULL_MIX, ()
@@ -188,8 +202,10 @@ def test_review_rejects_a_different_arrangement_revision(arrangement):
         TakeReview.assess("review", take, arrangement, observation)
 
 
-def test_review_uses_value_equality_for_evidence_and_revision_references(arrangement):
-    audio = AudioRevision("take", "original")
+def test_review_uses_value_equality_for_evidence_and_revision_references(
+    arrangement: Arrangement,
+) -> None:
+    audio = AudioRevisionRef("take", "original")
     take = Take(replace(arrangement.revision), audio)
     observation = ListenerObservation(
         replace(audio),
@@ -205,7 +221,9 @@ def test_review_uses_value_equality_for_evidence_and_revision_references(arrange
     assert review.observation.source is EvidenceSource.ISOLATED_VOCAL
 
 
-def test_review_finds_the_neighbors_of_a_word_late_in_a_long_take(arrangement):
+def test_review_finds_the_neighbors_of_a_word_late_in_a_long_take(
+    arrangement: Arrangement,
+) -> None:
     prelude = ("sing",) * 260
     scripture = ScriptureRange("synthetic", 300, 563)
     arrangement = replace(
@@ -228,8 +246,10 @@ def test_review_finds_the_neighbors_of_a_word_late_in_a_long_take(arrangement):
     )
 
 
-def test_the_take_and_its_review_keep_immutable_evidence(arrangement):
-    take = Take(arrangement.revision, AudioRevision("take", "original"))
+def test_the_take_and_its_review_keep_immutable_evidence(
+    arrangement: Arrangement,
+) -> None:
+    take = Take(arrangement.revision, AudioRevisionRef("take", "original"))
     words = (
         ObservedWord("we", TimeSpan(0, 10)),
         ObservedWord("softly", TimeSpan(20, 30)),
@@ -240,7 +260,7 @@ def test_the_take_and_its_review_keep_immutable_evidence(arrangement):
     review = TakeReview.assess("review", take, arrangement, observation)
     (finding,) = review.findings
     values = (
-        (take, "original_audio", AudioRevision("take", "repair")),
+        (take, "original_audio", AudioRevisionRef("take", "repair")),
         (take.original_audio, "revision", "repair"),
         (observation, "listener", "other listener"),
         (words[0], "text", "you"),

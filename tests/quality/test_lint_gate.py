@@ -7,7 +7,7 @@ import pytest
 
 
 @pytest.fixture
-def lint_gate(tmp_path):
+def lint_gate(tmp_path: Path) -> Path:
     scripts = tmp_path / "scripts"
     scripts.mkdir()
     project_scripts = Path(__file__).resolve().parents[2] / "scripts"
@@ -39,7 +39,7 @@ minimum-kill-percent = 95
     return tmp_path
 
 
-def run_lint(root, *args):
+def run_lint(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [sys.executable, str(root / "scripts/check_lint.py"), *args],
         cwd=root,
@@ -49,7 +49,9 @@ def run_lint(root, *args):
     )
 
 
-def test_full_and_focused_lint_apply_the_same_module_complexity_cap(lint_gate):
+def test_full_and_focused_lint_apply_the_same_module_complexity_cap(
+    lint_gate: Path,
+) -> None:
     full = run_lint(lint_gate)
     assert full.returncode == 1, (full.stdout, full.stderr)
     assert "C901" in full.stdout
@@ -60,7 +62,9 @@ def test_full_and_focused_lint_apply_the_same_module_complexity_cap(lint_gate):
     assert focused.returncode == 0, (focused.stdout, focused.stderr)
 
 
-def test_a_complexity_override_still_applies_the_other_lint_rules(lint_gate):
+def test_a_complexity_override_still_applies_the_other_lint_rules(
+    lint_gate: Path,
+) -> None:
     module = lint_gate / "src/override.py"
     contents = module.read_text(encoding="utf-8")
     module.write_text("import sys\n\n\n" + contents, encoding="utf-8")
@@ -72,7 +76,7 @@ def test_a_complexity_override_still_applies_the_other_lint_rules(lint_gate):
     assert "C901" not in result.stdout
 
 
-def test_a_typo_in_an_override_path_fails_verification(lint_gate):
+def test_a_typo_in_an_override_path_fails_verification(lint_gate: Path) -> None:
     config = lint_gate / "pyproject.toml"
     contents = config.read_text(encoding="utf-8")
     config.write_text(

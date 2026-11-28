@@ -1,7 +1,8 @@
 import pytest
 
 from bible_music.adapters.in_memory_scripture import InMemoryScripture
-from bible_music.app.preview_passage import PassageNotFound, preview_passage
+from bible_music.app.commands import PreviewPassageCommand
+from bible_music.app.preview_passage import PassageNotFound, PreviewPassage
 from bible_music.app.views import (
     BoundaryConflictKindView,
     BoundaryConflictView,
@@ -22,7 +23,7 @@ from bible_music.domain.scripture import ScriptureRange
 
 
 @pytest.fixture
-def scripture():
+def preview_passage() -> PreviewPassage:
     # ADR 0004's synthetic edition, with sentence and verse endings marked.
     edition = BibleEdition(
         "synthetic",
@@ -50,25 +51,29 @@ def scripture():
             ScriptureWord("“Ready?”", "1:4", WordEnding.SENTENCE, verse_end=True),
         ),
     )
-    return InMemoryScripture(
+    scripture = InMemoryScripture(
         {edition.id: edition},
         {
             (edition.id, "1:1–1:4"): ScriptureRange(edition.id, 0, 21),
             (edition.id, "1:1"): ScriptureRange(edition.id, 0, 5),
         },
     )
+    return PreviewPassage(scripture)
 
 
-def test_producer_previews_a_source_passage_pinned_at_a_semicolon(scripture):
+def test_producer_previews_a_source_passage_pinned_at_a_semicolon(
+    preview_passage: PreviewPassage,
+) -> None:
     preview = preview_passage(
-        scripture,
-        edition_id="synthetic",
-        reference="1:1–1:4",
-        plan_id="plan",
-        policy=SongBoundaryPolicy(
-            PermittedEnding.SENTENCE_OR_SEMICOLON, require_verse_end=True
+        PreviewPassageCommand(
+            edition_id="synthetic",
+            reference="1:1–1:4",
+            plan_id="plan",
+            policy=SongBoundaryPolicy(
+                PermittedEnding.SENTENCE_OR_SEMICOLON, require_verse_end=True
+            ),
+            pins=frozenset({8}),
         ),
-        pins=frozenset({8}),
     )
 
     assert preview == PassagePlanPreviewView(
@@ -94,14 +99,17 @@ def test_producer_previews_a_source_passage_pinned_at_a_semicolon(scripture):
     )
 
 
-def test_producer_sees_a_conflicting_pin_and_can_keep_it_for_revision(scripture):
+def test_producer_sees_a_conflicting_pin_and_can_keep_it_for_revision(
+    preview_passage: PreviewPassage,
+) -> None:
     preview = preview_passage(
-        scripture,
-        edition_id="synthetic",
-        reference="1:1–1:4",
-        plan_id="plan",
-        policy=SongBoundaryPolicy(PermittedEnding.SENTENCE, require_verse_end=True),
-        pins=frozenset({8}),
+        PreviewPassageCommand(
+            edition_id="synthetic",
+            reference="1:1–1:4",
+            plan_id="plan",
+            policy=SongBoundaryPolicy(PermittedEnding.SENTENCE, require_verse_end=True),
+            pins=frozenset({8}),
+        ),
     )
 
     assert preview.pins == frozenset({8})
@@ -128,13 +136,16 @@ def test_producer_sees_a_conflicting_pin_and_can_keep_it_for_revision(scripture)
     )
 
 
-def test_producer_sees_an_illegal_source_endpoint_even_without_any_cuts(scripture):
+def test_producer_sees_an_illegal_source_endpoint_even_without_any_cuts(
+    preview_passage: PreviewPassage,
+) -> None:
     preview = preview_passage(
-        scripture,
-        edition_id="synthetic",
-        reference="1:1",
-        plan_id="plan",
-        policy=SongBoundaryPolicy(PermittedEnding.SENTENCE),
+        PreviewPassageCommand(
+            edition_id="synthetic",
+            reference="1:1",
+            plan_id="plan",
+            policy=SongBoundaryPolicy(PermittedEnding.SENTENCE),
+        ),
     )
 
     assert preview.song_passages == ()
@@ -152,15 +163,16 @@ def test_producer_sees_an_illegal_source_endpoint_even_without_any_cuts(scriptur
     [("synthetic", "Titus 4"), ("unloaded", "1:1")],
 )
 def test_producer_cannot_preview_an_unresolvable_passage(
-    scripture, edition_id, reference
-):
+    preview_passage: PreviewPassage, edition_id: str, reference: str
+) -> None:
     with pytest.raises(PassageNotFound) as error:
         preview_passage(
-            scripture,
-            edition_id=edition_id,
-            reference=reference,
-            plan_id="plan",
-            policy=SongBoundaryPolicy(PermittedEnding.ANY_WORD),
+            PreviewPassageCommand(
+                edition_id=edition_id,
+                reference=reference,
+                plan_id="plan",
+                policy=SongBoundaryPolicy(PermittedEnding.ANY_WORD),
+            ),
         )
 
     assert str(error.value) == (
@@ -168,15 +180,18 @@ def test_producer_cannot_preview_an_unresolvable_passage(
     )
 
 
-def test_producer_previews_an_artists_proposed_cut_alongside_a_pin(scripture):
+def test_producer_previews_an_artists_proposed_cut_alongside_a_pin(
+    preview_passage: PreviewPassage,
+) -> None:
     preview = preview_passage(
-        scripture,
-        edition_id="synthetic",
-        reference="1:1–1:4",
-        plan_id="plan",
-        policy=SongBoundaryPolicy(PermittedEnding.SENTENCE_OR_SEMICOLON),
-        pins=frozenset({8}),
-        cuts=frozenset({12}),
+        PreviewPassageCommand(
+            edition_id="synthetic",
+            reference="1:1–1:4",
+            plan_id="plan",
+            policy=SongBoundaryPolicy(PermittedEnding.SENTENCE_OR_SEMICOLON),
+            pins=frozenset({8}),
+            cuts=frozenset({12}),
+        ),
     )
 
     assert preview.conflicts == ()
@@ -187,14 +202,17 @@ def test_producer_previews_an_artists_proposed_cut_alongside_a_pin(scripture):
     )
 
 
-def test_producer_can_see_conflicts_with_partial_or_missing_boundary_context(scripture):
+def test_producer_can_see_conflicts_with_partial_or_missing_boundary_context(
+    preview_passage: PreviewPassage,
+) -> None:
     preview = preview_passage(
-        scripture,
-        edition_id="synthetic",
-        reference="1:1–1:4",
-        plan_id="plan",
-        policy=SongBoundaryPolicy(PermittedEnding.SENTENCE, require_verse_end=True),
-        cuts=frozenset({0, 21}),
+        PreviewPassageCommand(
+            edition_id="synthetic",
+            reference="1:1–1:4",
+            plan_id="plan",
+            policy=SongBoundaryPolicy(PermittedEnding.SENTENCE, require_verse_end=True),
+            cuts=frozenset({0, 21}),
+        ),
     )
 
     assert preview.conflicts == (

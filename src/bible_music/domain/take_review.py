@@ -3,7 +3,7 @@ from enum import Enum, auto
 from typing import Optional
 
 from .arrangement import Arrangement, ArrangementRevision, ExpectedWord
-from .take import AudioRevision, Take
+from .take import AudioRevisionRef, Take
 
 
 class EvidenceSource(Enum):
@@ -44,7 +44,7 @@ class ObservedWord:
 
 @dataclass(frozen=True)
 class ListenerObservation:
-    audio_revision: AudioRevision
+    audio_revision: AudioRevisionRef
     listener: str
     source: EvidenceSource
     words: tuple[ObservedWord, ...]
@@ -71,7 +71,7 @@ class TakeReview:
     findings: tuple[Finding, ...]
 
     @property
-    def audio_revision(self) -> AudioRevision:
+    def audio_revision(self) -> AudioRevisionRef:
         return self.observation.audio_revision
 
     @classmethod

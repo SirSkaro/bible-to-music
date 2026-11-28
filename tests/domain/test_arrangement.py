@@ -16,7 +16,7 @@ from bible_music.domain.scripture import (
 
 
 @pytest.fixture
-def arrangement():
+def arrangement() -> Arrangement:
     song = SongPassage(
         PassagePlanRevision("plan", "1"), ScriptureRange("edition", 5, 9)
     )
@@ -32,7 +32,9 @@ def arrangement():
     )
 
 
-def test_arrangement_preserves_source_word_positions_and_performance_order(arrangement):
+def test_arrangement_preserves_source_word_positions_and_performance_order(
+    arrangement: Arrangement,
+) -> None:
     verse, chorus = arrangement.placements
     arrangement = replace(
         arrangement, placements=(chorus, replace(chorus, repeat=True), verse)
@@ -52,8 +54,8 @@ def test_arrangement_preserves_source_word_positions_and_performance_order(arran
     "words", [("we", "sing", "for"), ("we", "sing", "for", "great", "joy")]
 )
 def test_arrangement_requires_the_words_of_the_complete_song_passage(
-    arrangement, words
-):
+    arrangement: Arrangement, words: tuple[str, ...]
+) -> None:
     with pytest.raises(ValueError, match="one normalized word for each position"):
         replace(arrangement, scripture_words=words)
 
@@ -61,7 +63,9 @@ def test_arrangement_requires_the_words_of_the_complete_song_passage(
 @pytest.mark.parametrize(
     "span", [("other", 5, 7), ("edition", 4, 7), ("edition", 5, 10)]
 )
-def test_arrangement_rejects_placements_outside_the_song_passage(arrangement, span):
+def test_arrangement_rejects_placements_outside_the_song_passage(
+    arrangement: Arrangement, span: tuple[str, int, int]
+) -> None:
     verse, chorus = arrangement.placements
     with pytest.raises(ValueError, match="inside its song passage"):
         replace(
@@ -70,26 +74,28 @@ def test_arrangement_rejects_placements_outside_the_song_passage(arrangement, sp
         )
 
 
-def test_arrangement_accounts_for_every_source_word(arrangement):
+def test_arrangement_accounts_for_every_source_word(arrangement: Arrangement) -> None:
     with pytest.raises(ValueError, match="cover the complete song passage"):
         replace(arrangement, placements=arrangement.placements[:1])
 
 
-def test_arrangement_requires_authorization_before_reusing_scripture(arrangement):
+def test_arrangement_requires_authorization_before_reusing_scripture(
+    arrangement: Arrangement,
+) -> None:
     verse, chorus = arrangement.placements
     with pytest.raises(ValueError, match="authorized repeat"):
         replace(arrangement, placements=(verse, chorus, chorus))
 
 
 def test_arrangement_requires_a_previous_placement_for_an_authorized_repeat(
-    arrangement,
-):
+    arrangement: Arrangement,
+) -> None:
     verse, chorus = arrangement.placements
     with pytest.raises(ValueError, match="earlier placement"):
         replace(arrangement, placements=(verse, replace(chorus, repeat=True), chorus))
 
 
-def test_arrangement_accepts_a_long_song_passage(arrangement):
+def test_arrangement_accepts_a_long_song_passage(arrangement: Arrangement) -> None:
     words = ("sing",) * 259 + ("well",)
     scripture = ScriptureRange("edition", 5, 265)
     arranged = replace(
@@ -101,7 +107,9 @@ def test_arrangement_accepts_a_long_song_passage(arrangement):
     assert arranged.expected_words()[-1] == ExpectedWord("well", 264, 0)
 
 
-def test_an_arrangement_and_its_cited_values_are_immutable(arrangement):
+def test_an_arrangement_and_its_cited_values_are_immutable(
+    arrangement: Arrangement,
+) -> None:
     values = (
         (arrangement, "placements", ()),
         (arrangement.revision, "revision", "2"),
