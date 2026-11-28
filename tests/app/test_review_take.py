@@ -3,7 +3,8 @@ from dataclasses import replace
 import pytest
 
 from bible_music.adapters.in_memory_take_review import InMemoryTakeReview
-from bible_music.app.commands import ReviewTakeCommand
+from bible_music.app.ports.inbound import AssessTakePort
+from bible_music.app.queries import AssessTakeQuery
 from bible_music.app.review_take import ReviewTake, TakeReviewInputNotFound
 from bible_music.app.views import (
     AuditionWindowView,
@@ -35,7 +36,7 @@ from bible_music.domain.take_review import (
 
 
 @pytest.fixture
-def imported_take() -> tuple[ReviewTake, ReviewTakeCommand]:
+def imported_take() -> tuple[AssessTakePort, AssessTakeQuery]:
     song = SongPassage(
         PassagePlanRevision("plan", "1"), ScriptureRange("synthetic", 10, 16)
     )
@@ -70,16 +71,16 @@ def imported_take() -> tuple[ReviewTake, ReviewTakeCommand]:
     lookup = InMemoryTakeReview(
         {take.original_audio: take}, {arrangement.revision: arrangement}
     )
-    return ReviewTake(lookup), ReviewTakeCommand(
+    return ReviewTake(lookup), AssessTakeQuery(
         "offline-review", replace(take.original_audio), observation
     )
 
 
 def test_producer_reviews_an_imported_take_and_gets_a_window_for_the_missing_word(
-    imported_take: tuple[ReviewTake, ReviewTakeCommand],
+    imported_take: tuple[AssessTakePort, AssessTakeQuery],
 ) -> None:
-    review_take, command = imported_take
-    review = review_take(command)
+    review_take, query = imported_take
+    review = review_take(query)
 
     assert review == TakeReviewView(
         review_id="offline-review",
@@ -111,25 +112,25 @@ def test_producer_reviews_an_imported_take_and_gets_a_window_for_the_missing_wor
 
 
 def test_producer_cannot_review_the_take_with_evidence_from_another_revision(
-    imported_take: tuple[ReviewTake, ReviewTakeCommand],
+    imported_take: tuple[AssessTakePort, AssessTakeQuery],
 ) -> None:
-    review_take, command = imported_take
-    observation = command.observation
-    wrong_revision = replace(command.audio_revision, revision="repair")
+    review_take, query = imported_take
+    observation = query.observation
+    wrong_revision = replace(query.audio_revision, revision="repair")
 
     with pytest.raises(ValueError, match="different audio revision"):
         review_take(
             replace(
-                command, observation=replace(observation, audio_revision=wrong_revision)
+                query, observation=replace(observation, audio_revision=wrong_revision)
             )
         )
 
 
 def test_producer_can_inspect_an_omission_without_a_phrase_window(
-    imported_take: tuple[ReviewTake, ReviewTakeCommand],
+    imported_take: tuple[AssessTakePort, AssessTakeQuery],
 ) -> None:
-    review_take, command = imported_take
-    observation = command.observation
+    review_take, query = imported_take
+    observation = query.observation
     blurred_word = replace(
         observation.words[1], timing=None, precision=TimingPrecision.APPROXIMATE
     )
@@ -139,7 +140,7 @@ def test_producer_can_inspect_an_omission_without_a_phrase_window(
         words=(observation.words[0], blurred_word, *observation.words[2:]),
     )
 
-    review = review_take(replace(command, observation=observation))
+    review = review_take(replace(query, observation=observation))
 
     assert review.evidence_source is EvidenceSourceView.ISOLATED_VOCAL
     assert review.observed_words[1] == ObservedWordView(
@@ -156,33 +157,33 @@ def test_producer_can_inspect_an_omission_without_a_phrase_window(
     ],
 )
 def test_producer_can_distinguish_a_match_from_an_inconclusive_review(
-    imported_take: tuple[ReviewTake, ReviewTakeCommand],
+    imported_take: tuple[AssessTakePort, AssessTakeQuery],
     middle_words: tuple[ObservedWord, ...],
     outcome: ReviewOutcomeView,
 ) -> None:
-    review_take, command = imported_take
-    observation = command.observation
+    review_take, query = imported_take
+    observation = query.observation
     observation = replace(
         observation,
         words=(*observation.words[:2], *middle_words, *observation.words[3:]),
     )
 
-    review = review_take(replace(command, observation=observation))
+    review = review_take(replace(query, observation=observation))
 
     assert review.outcome is outcome
     assert review.findings == ()
 
 
 def test_review_reports_a_requested_revision_that_is_unavailable(
-    imported_take: tuple[ReviewTake, ReviewTakeCommand],
+    imported_take: tuple[AssessTakePort, AssessTakeQuery],
 ) -> None:
-    review_take, command = imported_take
+    review_take, query = imported_take
     unknown = AudioRevisionRef("imported-take", "unavailable")
-    command = replace(
-        command,
+    query = replace(
+        query,
         audio_revision=unknown,
-        observation=replace(command.observation, audio_revision=unknown),
+        observation=replace(query.observation, audio_revision=unknown),
     )
 
     with pytest.raises(TakeReviewInputNotFound, match="unavailable"):
-        review_take(command)
+        review_take(query)

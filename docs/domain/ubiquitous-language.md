@@ -28,7 +28,7 @@ These are the words the producer and the software use in the **Scripture music p
 | **Chorus / refrain** | A musical role and its placement. A **repeated Scripture chorus** reuses a declared span. A **single terminal chorus** occurs once at the end. A **shared custom refrain** adds explicitly approved words that can recur across songs. Origin, permission and placement are separate facts. |
 | **Take** · aggregate root | One distinct full performance, generated or imported, linked to the arrangement revision it performed. It owns the recording lineage. |
 | **Audio revision** · entity within a take | One identifiable version of that performance. The original has no parent. A local render or regenerated region has a parent in the same take. Address it through the take identity and revision key. |
-| **Audio revision reference** · value object | The take identity and revision key together identify one exact audio revision. A review command and its observation each carry a reference so the review can check that the evidence belongs to the requested revision. |
+| **Audio revision reference** · value object | The take identity and revision key together identify one exact audio revision. A take assessment query and its observation each carry a reference so the review can check that the evidence belongs to the requested revision. |
 
 **In conversation.** “Use my prompt verbatim. Let the artist explore genres. Keep the chorus as written.” A wide creative latitude still leaves two of these decisions fixed. “This repair improved take two” identifies a new revision of the same performance.
 

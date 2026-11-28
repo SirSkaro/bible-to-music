@@ -1,8 +1,9 @@
 import pytest
 
 from bible_music.adapters.in_memory_scripture import InMemoryScripture
-from bible_music.app.commands import PreviewPassageCommand
+from bible_music.app.ports.inbound import PreviewPassagePort
 from bible_music.app.preview_passage import PassageNotFound, PreviewPassage
+from bible_music.app.queries import PreviewPassageQuery
 from bible_music.app.views import (
     BoundaryConflictKindView,
     BoundaryConflictView,
@@ -23,7 +24,7 @@ from bible_music.domain.scripture import ScriptureRange
 
 
 @pytest.fixture
-def preview_passage() -> PreviewPassage:
+def preview_passage() -> PreviewPassagePort:
     # ADR 0004's synthetic edition, with sentence and verse endings marked.
     edition = BibleEdition(
         "synthetic",
@@ -62,10 +63,10 @@ def preview_passage() -> PreviewPassage:
 
 
 def test_producer_previews_a_source_passage_pinned_at_a_semicolon(
-    preview_passage: PreviewPassage,
+    preview_passage: PreviewPassagePort,
 ) -> None:
     preview = preview_passage(
-        PreviewPassageCommand(
+        PreviewPassageQuery(
             edition_id="synthetic",
             reference="1:1–1:4",
             plan_id="plan",
@@ -100,10 +101,10 @@ def test_producer_previews_a_source_passage_pinned_at_a_semicolon(
 
 
 def test_producer_sees_a_conflicting_pin_and_can_keep_it_for_revision(
-    preview_passage: PreviewPassage,
+    preview_passage: PreviewPassagePort,
 ) -> None:
     preview = preview_passage(
-        PreviewPassageCommand(
+        PreviewPassageQuery(
             edition_id="synthetic",
             reference="1:1–1:4",
             plan_id="plan",
@@ -137,10 +138,10 @@ def test_producer_sees_a_conflicting_pin_and_can_keep_it_for_revision(
 
 
 def test_producer_sees_an_illegal_source_endpoint_even_without_any_cuts(
-    preview_passage: PreviewPassage,
+    preview_passage: PreviewPassagePort,
 ) -> None:
     preview = preview_passage(
-        PreviewPassageCommand(
+        PreviewPassageQuery(
             edition_id="synthetic",
             reference="1:1",
             plan_id="plan",
@@ -163,11 +164,11 @@ def test_producer_sees_an_illegal_source_endpoint_even_without_any_cuts(
     [("synthetic", "Titus 4"), ("unloaded", "1:1")],
 )
 def test_producer_cannot_preview_an_unresolvable_passage(
-    preview_passage: PreviewPassage, edition_id: str, reference: str
+    preview_passage: PreviewPassagePort, edition_id: str, reference: str
 ) -> None:
     with pytest.raises(PassageNotFound) as error:
         preview_passage(
-            PreviewPassageCommand(
+            PreviewPassageQuery(
                 edition_id=edition_id,
                 reference=reference,
                 plan_id="plan",
@@ -181,10 +182,10 @@ def test_producer_cannot_preview_an_unresolvable_passage(
 
 
 def test_producer_previews_an_artists_proposed_cut_alongside_a_pin(
-    preview_passage: PreviewPassage,
+    preview_passage: PreviewPassagePort,
 ) -> None:
     preview = preview_passage(
-        PreviewPassageCommand(
+        PreviewPassageQuery(
             edition_id="synthetic",
             reference="1:1–1:4",
             plan_id="plan",
@@ -203,10 +204,10 @@ def test_producer_previews_an_artists_proposed_cut_alongside_a_pin(
 
 
 def test_producer_can_see_conflicts_with_partial_or_missing_boundary_context(
-    preview_passage: PreviewPassage,
+    preview_passage: PreviewPassagePort,
 ) -> None:
     preview = preview_passage(
-        PreviewPassageCommand(
+        PreviewPassageQuery(
             edition_id="synthetic",
             reference="1:1–1:4",
             plan_id="plan",

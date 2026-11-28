@@ -14,8 +14,8 @@
 
 | Given and when | Expected producer-visible outcome |
 | --- | --- |
-| A review command names an exact audio revision and its observation omits a lead word between two observed words with timings | Report the omission and the inferred phrase window for that revision. Keep the inference explicit. |
-| A review command carries observation evidence for a different audio revision | Reject the mismatched evidence. |
+| A take assessment query names an exact audio revision and its observation omits a lead word between two observed words with timings | Report the omission and the inferred phrase window for that revision. Keep the inference explicit. |
+| A take assessment query carries observation evidence for a different audio revision | Reject the mismatched evidence. |
 | The arrangement calls for a repeated Scripture chorus and the take sings it twice | Accept both placements. A duplicate finding would be a false alarm. |
 | A producer fixes the prompt but delegates genre and receives a conflicting proposal | Preserve the prompt verbatim and surface the conflict before dispatch. |
 | Three distinct takes in genre A outrank every take in genre B for this song | All three places go to A. Another song passage has its own list. |

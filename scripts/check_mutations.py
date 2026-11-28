@@ -28,11 +28,13 @@ class MutationResult(TypedDict):
 
 
 ROOT = Path(__file__).resolve().parents[1]
-# Cosmic Ray 8.9.0 generates no mutants for these in-memory lookups.
+# Cosmic Ray 8.9.0 generates no mutants for these lookups or protocol declarations.
 MAY_HAVE_NO_MUTANTS = frozenset(
     {
         SOURCE_PACKAGE / "adapters/in_memory_scripture.py",
         SOURCE_PACKAGE / "adapters/in_memory_take_review.py",
+        SOURCE_PACKAGE / "app/ports/inbound.py",
+        SOURCE_PACKAGE / "app/ports/outbound.py",
     }
 )
 PYTEST_STATUS = "PYTEST_EXIT="

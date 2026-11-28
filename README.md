@@ -27,7 +27,7 @@ The diagram and the glossary use the same words as a producer auditioning a reco
 
 ## Architecture
 
-The intended implementation is a Python modular monolith using Clean Architecture and ports and adapters. Source dependencies point inward. At runtime a use case calls an injected adapter through a port the use case owns.
+The intended implementation is a Python modular monolith using Clean Architecture and ports and adapters. Source dependencies point inward. A driving adapter calls a use case through its inbound protocol. The use case calls its injected dependencies through outbound protocols.
 
 | Component | Responsibility |
 | --- | --- |
@@ -38,9 +38,9 @@ The intended implementation is a Python modular monolith using Clean Architectur
 
 ## Offline use cases
 
-`ReviewTake(lookup)` accepts a `ReviewTakeCommand` with a review ID, an exact audio revision reference, and a recorded listener observation. The lookup supplies the imported take and its arrangement. The immutable `TakeReviewView` carries the revision identifiers, evidence, and findings. A finding includes an inferred audition window when both neighboring words have usable timing.
+`ReviewTake(lookup)` implements `AssessTakePort`. It accepts an `AssessTakeQuery` with a review ID, an exact audio revision reference, and a recorded listener observation. The lookup supplies the imported take and its arrangement. The immutable `TakeReviewView` carries the revision identifiers, evidence, and findings. A finding includes an inferred audition window when both neighboring words have usable timing.
 
-`PreviewPassage(scripture)` accepts a `PreviewPassageCommand` with the edition, source reference, plan ID, song boundary policy, pins, and proposed cuts. Its immutable `PassagePlanPreviewView` provides the song passages or conflicts with word context and legal alternatives. The offline adapters resolve registered references from data held in memory.
+`PreviewPassage(scripture)` implements `PreviewPassagePort`. It accepts a `PreviewPassageQuery` with the edition, source reference, plan ID, song boundary policy, pins, and proposed cuts. Its immutable `PassagePlanPreviewView` provides the song passages or conflicts with word context and legal alternatives. The offline adapters resolve registered references from data held in memory. [Command and query conventions](docs/decisions/0007-command-query-separation.md)
 
 ## Offline verification
 
@@ -57,9 +57,9 @@ python -m pip install --no-index --no-build-isolation --check-build-dependencies
 python -m pip check
 ```
 
-Run the full offline suite with `bash scripts/check-domain.sh`. It runs pytest, Ruff lint and format checks including annotation coverage, Import Linter, and Cosmic Ray. Architecture checks cover application commands and views, inward dependency direction, and the domain's standard-library boundary.
+Run the full offline suite with `bash scripts/check-domain.sh`. It runs pytest, Ruff lint and format checks including annotation coverage, Import Linter, and Cosmic Ray. Architecture checks cover application requests, views and port signatures, inward dependency direction, and the domain's standard-library boundary.
 
-The default McCabe complexity cap is 10 per function and the default confirmed mutation kill floor is 95% per covered module. Cosmic Ray runs the behavior and architecture tests against mutations in a temporary source copy. Survivors and untested mutants earn zero, and incomplete runs fail. Cosmic Ray 8.9.0 generates no mutants for the in-memory lookups, which the application behavior tests exercise.
+The default McCabe complexity cap is 10 per function and the default confirmed mutation kill floor is 95% per covered module. Cosmic Ray runs the behavior and architecture tests against mutations in a temporary source copy. Survivors and untested mutants earn zero, and incomplete runs fail. The gate reports zero generated mutants separately for the in-memory lookups and protocol declarations.
 
 For focused verification, run the relevant test file and pass the source path to the lint or mutation command. Omit the path to check the whole project. The architecture suite combines the pytest contracts with Import Linter.
 
