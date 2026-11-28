@@ -38,6 +38,19 @@ target-version = "py313"
 
 [tool.ruff.lint]
 select = ["ANN", "B", "C901", "E4", "E7", "E9", "F", "I", "UP"]
+extend-select = [
+    "DTZ001", "DTZ002", "DTZ003", "DTZ004", "DTZ005", "DTZ006", "DTZ007", "DTZ901",
+    "ISC004",
+    "PGH004",
+    "PIE794", "PIE796",
+    "PLE", "PLW1510",
+    "PT010", "PT011", "PT012", "PT014", "PT015", "PT017", "PT028",
+    "RUF008", "RUF009", "RUF012", "RUF013", "RUF032", "RUF043",
+    "RUF100", "RUF101", "RUF102",
+    "S101", "SLF001",
+    "T100",
+    "W605",
+]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
@@ -45,6 +58,8 @@ max-complexity = 10
 [tool.ruff.lint.per-file-ignores]
 # Cosmic Ray 8.9.0 mutates module-level return-type unions as binary operations.
 "src/bible_music/domain/take_review.py" = ["UP045"]
+# Pytest rewrites test assertions to explain failures.
+"tests/**" = ["S101"]
 
 [tool.importlinter]
 root_package = "bible_music"

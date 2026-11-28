@@ -63,7 +63,7 @@ lint-imports --no-cache
 python scripts/check_mutations.py src/bible_music/app/review_take.py
 ```
 
-The defaults are a 95% confirmed mutation kill floor per covered module and a McCabe complexity cap of 10 per function. Configure any per-module overrides in `pyproject.toml` by repository-relative Python file path and record the reason for the override. Focused and full runs use the same thresholds. [ADR 0003](docs/decisions/0003-replay-and-live-evaluation.md)
+The defaults are a 95% confirmed mutation kill floor per covered module and a McCabe complexity cap of 10 per function. Configure any per-module overrides in `pyproject.toml` by repository-relative Python file path and record the reason for the override. Focused and full runs use the same thresholds. [Mutation policy](docs/decisions/0003-replay-and-live-evaluation.md) · [Lint policy](docs/decisions/0009-python-lint-rules.md)
 
 ## When to open another file
 
@@ -77,6 +77,7 @@ The defaults are a 95% confirmed mutation kill floor per covered module and a Mc
 | Python annotations or type-checking policy | [ADR 0006](docs/decisions/0006-python-type-hints.md) for coverage and verification. |
 | A use case's effects or request type | [ADR 0007](docs/decisions/0007-command-query-separation.md) for command and query conventions. |
 | Mapping a domain result to an application view | [ADR 0008](docs/decisions/0008-application-view-mapping.md) for projection ownership and tests. |
+| Ruff rules, lint exceptions, formatting or complexity | [ADR 0009](docs/decisions/0009-python-lint-rules.md) for rule selection and verification scope. |
 | Cut positions, creative authority, authorized lyrics or finalist eligibility | [ADR 0004](docs/decisions/0004-song-passages-and-creative-authority.md) for conflicts, fixed choices and selection. |
 | Implementing or repairing an observable behavior | [Local TDD skill](.agents/skills/tdd/SKILL.md). Use a public use case, aggregate or adapter contract. Take one failing example through green and refactor. |
 | Implementing a durable LangGraph adapter | [Local LangChain skill](.agents/skills/langchain-build-agent/SKILL.md). Verify APIs against the installed, locked package. The application owns business transitions. |

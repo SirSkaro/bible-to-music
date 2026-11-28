@@ -57,7 +57,7 @@ python -m pip install --no-index --no-build-isolation --check-build-dependencies
 python -m pip check
 ```
 
-Run the full offline suite with `bash scripts/check-domain.sh`. It runs pytest, Ruff lint and format checks including annotation coverage, Import Linter, and Cosmic Ray. Architecture checks cover application requests, views and port signatures, inward dependency direction, and the domain's standard-library boundary.
+Run the full offline suite with `bash scripts/check-domain.sh`. It runs pytest, Ruff lint and format checks including annotation coverage, Import Linter, and Cosmic Ray. Architecture checks cover application requests, views and port signatures, inward dependency direction, and the domain's standard-library boundary. [Lint policy](docs/decisions/0009-python-lint-rules.md)
 
 The default McCabe complexity cap is 10 per function and the default confirmed mutation kill floor is 95% per covered module. Cosmic Ray runs the behavior and architecture tests against mutations in a temporary source copy. Survivors and untested mutants earn zero, and incomplete runs fail. The gate reports zero generated mutants separately for the in-memory lookups and protocol declarations.
 
